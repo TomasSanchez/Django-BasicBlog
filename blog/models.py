@@ -1,11 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from users.models import User
+from django.conf import settings
 from django.utils import timezone
-
-
-class User(AbstractUser):
-    read_only = models.BooleanField(default=True)
-
 
 class Post(models.Model):
 
@@ -20,32 +16,46 @@ class Post(models.Model):
     title = models.CharField(max_length=250)
     content = models.TextField()
     published = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='post_author')
     status = models.CharField(max_length=10, choices=options, default='published')
-    likes = models.IntegerField(default=0)
     objects = models.Manager()  # default manager
     postobjects = PostObjects()  # custom manager
 
     class Meta:
-        ordering = ('-likes',)
+        ordering = ('-published',)
 
     def __str__(self):
         return self.title
+
+    #if likes is defined inside Post
+    # def number_of_likes(self):
+    #     return self.likes.count()    
 
 class Comment(models.Model):
     
-    class CommentObjects(models.Manager):
-        def get_queryset(self):
-            return super().get_queryset().filter(post__id='pk')
-
     content = models.TextField()
     published = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.IntegerField(default=0)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comment')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comment_post')
     
     class Meta:
-        ordering = ('-likes',)
+        ordering = ('-published',)
 
     def __str__(self):
         return self.title
+
+
+class Likes(models.Model):
+    user_liker = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_liked = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True)
+    comment_liked = models.ForeignKey(Comment, on_delete=models.CASCADE, blank=True)
+
+    def post_likes(self):
+        return self.post_liked.count()
+
+    def comment_likes(self):
+        return self.comment_liked.count()
+
+"""
+likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='post_likes', blank=True)
+"""
