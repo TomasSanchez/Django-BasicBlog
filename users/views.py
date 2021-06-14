@@ -2,6 +2,10 @@ from django.db.models.query import QuerySet
 from .models import User
 from .serializers import UserSerializer, RegisterUserSerializer
 from rest_framework.views import APIView
+
+from django.contrib.auth import login
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, DjangoModelPermissions

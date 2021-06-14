@@ -22,6 +22,10 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    def perform_create(self, serializer):
+        user = self.request.user
+        serializer.save(author=user)
+
 
 # returning a single post, updating a post or deleting it
 class PostDetail(generics.RetrieveUpdateDestroyAPIView, PostUserWritePermission):

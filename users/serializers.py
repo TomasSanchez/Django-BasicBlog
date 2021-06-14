@@ -20,10 +20,14 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     
     liked_posts = serializers.SerializerMethodField('get_liked_posts')
-    
+    user_posts = serializers.SerializerMethodField('get_user_posts')
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'user_name', 'start_date', 'about', 'liked_posts')
+        fields = ('id', 'email', 'first_name', 'last_name', 'user_name', 'start_date', 'about', 'liked_posts', 'user_posts')
 
     def get_liked_posts(self, user):
         return user.post_likes.all().values()
+    
+    def get_user_posts(self, user):
+        return user.post_author.all().values()
