@@ -1,1 +1,1 @@
-# Djangp-QuizApp
+# Django Blog App
