@@ -1,5 +1,4 @@
 from django.db import models
-from users.models import User
 from django.conf import settings
 from django.utils import timezone
 
@@ -39,8 +38,8 @@ class Comment(models.Model):
     content = models.TextField()
     published = models.DateTimeField(default=timezone.now)
     likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comment_post')
+    author = models.ForeignKey(User, on_delete=models.CASCADE) 
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comment_post') 
     
     class Meta:
         ordering = ('-published',)
