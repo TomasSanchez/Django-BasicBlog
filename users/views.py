@@ -27,6 +27,7 @@ class CreateUser(APIView):
             new_user = reg_serializer.save()
             if new_user:
                 return Response({'detail': 'User Created'}, status=status.HTTP_201_CREATED)
+        print(reg_serializer.errors)
         return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

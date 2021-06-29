@@ -15,13 +15,15 @@ const Blogs = ({ blogs }: propType) => {
 							key={post.id}>
 							<div className='md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col'>
 								<span className='font-semibold title-font text-white'>
-									author:
+									Author:
 									<a href={`/profile/${post.author.user_id}`}>
+										{" "}
 										{post.author.user_name}
 									</a>
 								</span>
 								<span className='mt-1 text-gray-500 text-sm'>
-									{post.published}
+									{post.published.split("T")[0]}{" "}
+									{post.published.split("T")[1].split(".")[0]}
 								</span>
 							</div>
 							<div className='md:flex-grow'>
@@ -64,7 +66,7 @@ const Blogs = ({ blogs }: propType) => {
 								<a
 									className='text-indigo-400 inline-flex items-center mt-4'
 									href={`/${post.id}`}>
-									Learn More
+									View Post
 									<svg
 										className='w-4 h-4 ml-2'
 										viewBox='0 0 24 24'
