@@ -1,9 +1,15 @@
-const Post = ({ post }: any) => {
+import { postType } from "../types/postTypes";
+
+type propType = {
+	post: postType;
+};
+
+const Post = ({ post }: propType) => {
 	return (
 		<div className='py-8 flex flex-wrap md:flex-nowrap'>
 			<div className='md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col'>
 				<span className='font-semibold title-font text-white'>
-					By: {post.user_name}
+					By: {post.author.user_name}
 				</span>
 				<span className='mt-1 text-gray-500 text-sm'>
 					{post.published}

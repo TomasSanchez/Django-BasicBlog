@@ -3,9 +3,10 @@ from users.models import User
 from django.db.models import query
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, BasePermission, DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly, SAFE_METHODS
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 from blog.models import Comment, Post
 from .serializers import CommentSerializer, PostSerializer
+
 
 class PostUserWritePermission(BasePermission):
     message = 'Editing posts is restricted to post owner'
@@ -16,9 +17,13 @@ class PostUserWritePermission(BasePermission):
 
         return obj.author == request.user 
 
-# Returning all post, or creating a post
-class PostList(generics.ListCreateAPIView):
-    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+
+class PostList(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class PostCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -26,22 +31,26 @@ class PostList(generics.ListCreateAPIView):
         user = self.request.user
         serializer.save(author=user)
 
-
-# returning a single post, updating a post or deleting it
+# FIX 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView, PostUserWritePermission):
+    # Check/test permission
     permission_classes = [PostUserWritePermission]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
 
-# retrieving all comments related to a single post(pk) or creates a comment on post(pk)
-class CommentList(generics.ListCreateAPIView):
-    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+# retrieving all comments related to a single post(pk) 
+class CommentList(generics.ListAPIView):
     serializer_class = CommentSerializer
     def get_queryset(self):
         pk = self.kwargs['pk']
         queryset = Comment.objects.filter(post=pk)
         return queryset
+
+class CommentCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
     # def create() calls perform_create() to save the comment, we can edit 'create()' like commented below or edit perform_create like so, both work the same
     def perform_create(self, serializer):
@@ -58,10 +67,8 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView, PostUserWritePermissi
     serializer_class = CommentSerializer
 
 
-# Returns all post based on user id
+# Returns all post based on user id, used for viewing posts on user profile
 class PostUserList(generics.ListAPIView):
-    # permission_classes = [DjangoModelPermissions]
-    permission_classes = [AllowAny]
     serializer_class = PostSerializer
 
     def get_queryset(self):
@@ -70,8 +77,8 @@ class PostUserList(generics.ListAPIView):
         return queryset
 
 
-class PostLike(generics.RetrieveUpdateAPIView):
-
+class PostLike(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -96,6 +103,36 @@ class PostLike(generics.RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class CommentLike(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        user = self.request.user
+        if user in instance.likes.all():
+            print('user already liked!')
+            instance.likes.remove(user.id)
+            print('you have been removed from likes')
+        else:
+            print('user hasnt liked')    
+            instance.likes.add(user.id)
+            print('you have been added to likes')
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        if getattr(instance, '_prefetched_objects_cache', None):            
+            instance._prefetched_objects_cache = {}
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+
 
 
 """ Concrete View Classes

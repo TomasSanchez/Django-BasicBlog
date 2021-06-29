@@ -1,57 +1,97 @@
-import dynamic from "next/dynamic";
-import { useEffect, useState, SyntheticEvent } from "react";
-import { useRouter } from "next/dist/client/router";
+import { useEffect, useState, SyntheticEvent, useContext } from "react";
+import Cookies from "../ui/js-cookie";
+import Router from "next/router";
+import { ContextAuth } from "../components/AuthContext";
 
 const login = () => {
+	const { isLogedIn, setIsLogedIn, csrfToken, setCsrfToken } =
+		useContext(ContextAuth);
+	const [error, setError] = useState<string>("");
 	const [user, setUser] = useState({
 		email: "",
 		password: "",
 	});
 
-	const router = useRouter();
+	const get_csrf = async () => {
+		await fetch("http://localhost:8000/api/users/get_csrf", {
+			credentials: "include",
+		});
+		setCsrfToken(Cookies.get("csrftoken"));
+	};
 
 	const handleSubmit = async (e: SyntheticEvent) => {
 		e.preventDefault();
-
-		const response = await fetch("http://127.0.0.1:8000/api/token/", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				email: user.email,
-				password: user.password,
-			}),
-		});
-		const jsResponse = await response.json();
-		console.log(jsResponse);
-
-		if (response.status == 401) {
-			alert(response.statusText);
-		} else {
-			localStorage.setItem("access_token", jsResponse.access);
-			localStorage.setItem("refresh_token", jsResponse.refresh);
-			// router.push("/");
+		try {
+			const response = await fetch(
+				"http://localhost:8000/api/users/login",
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken,
+					},
+					method: "POST",
+					credentials: "include",
+					body: JSON.stringify(user),
+				}
+			);
+			if (response.ok) {
+				setIsLogedIn(true);
+				setCsrfToken(Cookies.get("csrftoken"));
+				Router.push("/");
+			} else {
+				setError("Username or password Incorrect");
+				throw new Error(error);
+			}
+		} catch (err) {
+			console.error(err);
 		}
 	};
 
-	return (
+	useEffect(() => {
+		get_csrf();
+		console.log("islogedIN from uE: ", isLogedIn);
+
+		if (isLogedIn) {
+			console.log("this ran");
+
+			Router.push("/");
+		}
+	}, []);
+	console.log("islogedIN from outside uE: ", isLogedIn);
+
+	return isLogedIn ? (
+		<div className='text-gray-400 bg-gray-900 container px-5 py-24 mx-auto flex flex-wrap items-center'>
+			{" "}
+			You are already logged in! Go to{" "}
+			<a href='/' className='text-red-300 underline ml-1'>
+				{" "}
+				Home
+			</a>
+		</div>
+	) : (
 		<div>
 			<section className='text-gray-400 bg-gray-900 body-font '>
 				<div className='container px-5 py-24 mx-auto flex flex-wrap items-center'>
 					<div className='lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0'>
 						<h1 className='title-font font-medium text-3xl text-white'>
-							Slow-carb next level shoindxgoitch ethical
-							authentic, poko scenester
+							Slow-carb n
 						</h1>
 						<p className='leading-relaxed mt-4'>
 							Poke slow-carb mixtape knausgaard, typewriter street
-							art gentrify hammock starladder roathse. Craies
-							vegan tousled etsy austin.
+							art gentrify ha
 						</p>
 					</div>
-					<div className='lg:w-2/6 md:w-1/2 bg-gray-800 bg-opacity-50 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0'>
+					<div className='lg:w-2/6 md:w-1/2 bg-gray-800 bg-opacity-50 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 mr-16'>
 						<h2 className='text-white text-lg font-medium title-font mb-5'>
 							Login
 						</h2>
+						{error && (
+							<h2
+								className='lg:w-2/6 md:w-1/2 text-red-300 w-auto'
+								style={{ width: "auto" }}>
+								{error}
+							</h2>
+						)}
 						<form action='' onSubmit={handleSubmit}>
 							<div className='relative mb-4'>
 								<label

@@ -1,17 +1,24 @@
-import Post from "./Post";
+import { postType } from "../types/postTypes";
 
-const Blogs = ({ blogs }: any) => {
+type propType = {
+	blogs: postType[];
+};
+
+const Blogs = ({ blogs }: propType) => {
 	return (
 		<section className='text-gray-400 bg-gray-900 body-font overflow-hidden'>
 			<div className='container px-5 py-24 mx-auto'>
 				<div className='-my-8 divide-y-2 divide-gray-800'>
-					{blogs.map((post: any) => (
+					{blogs.map((post: postType) => (
 						<div
 							className='py-8 flex flex-wrap md:flex-nowrap'
 							key={post.id}>
 							<div className='md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col'>
 								<span className='font-semibold title-font text-white'>
-									author: {post.user_name}
+									author:
+									<a href={`/profile/${post.author.user_id}`}>
+										{post.author.user_name}
+									</a>
 								</span>
 								<span className='mt-1 text-gray-500 text-sm'>
 									{post.published}

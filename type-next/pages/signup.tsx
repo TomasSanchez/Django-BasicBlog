@@ -1,8 +1,10 @@
-import { useRouter } from "next/dist/client/router";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import Router from "next/router";
+import { SyntheticEvent } from "react";
+import { ContextAuth } from "../components/AuthContext";
 
 const signup = () => {
-	const router = useRouter();
+	const [error, setError] = useState("");
 	const [user, setUser] = useState({
 		email: "",
 		user_name: "",
@@ -11,17 +13,36 @@ const signup = () => {
 		password: "",
 	});
 
-	const handleSubmit = (e: any) => {
+	const { isLogedIn, setIsLogedIn, csrfToken, setCsrfToken } =
+		useContext(ContextAuth);
+
+	const handleSubmit = async (e: SyntheticEvent) => {
 		e.preventDefault();
 		console.log(user);
-		setUser({
-			email: "",
-			user_name: "",
-			first_name: "",
-			last_name: "",
-			password: "",
+		const response = await fetch("http://localhost:8000/api/users/create", {
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrfToken,
+			},
+			method: "POST",
+			credentials: "include",
+			body: JSON.stringify(user),
 		});
-		router.push("/login");
+		if (response.ok) {
+			// ADD modal 'acc created succesfully' then redirect
+			console.log("ok ", response);
+
+			// Router.push('/login')
+		} else {
+			setUser({
+				email: "",
+				user_name: "",
+				first_name: "",
+				last_name: "",
+				password: "",
+			});
+			setError("something went wrong, please try again");
+		}
 	};
 
 	return (

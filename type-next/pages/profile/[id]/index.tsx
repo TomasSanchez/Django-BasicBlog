@@ -1,7 +1,13 @@
 import Blogs from "../../../components/Blogs";
+import { postType } from "../../../types/postTypes";
+import { userType } from "../../../types/userTypes";
 
-const profile = ({ user, userPosts }: any) => {
-	console.log(user);
+type propType = {
+	user: userType;
+	userPosts: postType[];
+};
+
+const profile = ({ user, userPosts }: propType) => {
 	return (
 		<div>
 			<section className='text-gray-400 bg-gray-900 body-font'>
@@ -77,8 +83,8 @@ export const getStaticPaths = async () => {
 	const userResponse = await fetch(`http://127.0.0.1:8000/api/users/`);
 	const users = await userResponse.json();
 
-	const ids = users.map((user: any) => user.id);
-	const paths = ids.map((id: any) => ({ params: { id: id.toString() } }));
+	const ids = users.map((user: userType) => user.id);
+	const paths = ids.map((id: number) => ({ params: { id: id.toString() } }));
 
 	return {
 		paths,

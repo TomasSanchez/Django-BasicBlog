@@ -1,7 +1,34 @@
 import Link from "next/link";
-import React from "react";
+import React, { useContext } from "react";
+import Cookies from "../ui/js-cookie";
+import Router from "next/router";
+import { ContextAuth } from "./AuthContext";
 
 const Navbar = () => {
+	const { isLogedIn, setIsLogedIn, csrfToken } = useContext(ContextAuth);
+
+	const handleLogout = async () => {
+		console.log("csrf from navbar logout: ", csrfToken);
+
+		try {
+			const response = await fetch(
+				"http://localhost:8000/api/users/logout",
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken,
+					},
+					method: "POST",
+					credentials: "include",
+				}
+			);
+			if (response.ok) {
+				setIsLogedIn(false);
+				Router.push("/");
+			}
+		} catch (error) {}
+	};
+
 	return (
 		<React.Fragment>
 			<div className='border border-gray-700 shadow'>
@@ -19,32 +46,56 @@ const Navbar = () => {
 							<a className='mr-5 hover:text-white'>Second Link</a>
 							<a className='mr-5 hover:text-white'>Create Post</a>
 						</nav>
-						<button className='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0'>
-							Login
-							<svg
-								fill='none'
-								stroke='currentColor'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								strokeWidth={2}
-								className='w-4 h-4 ml-1'
-								viewBox='0 0 24 24'>
-								<path d='M5 12h14M12 5l7 7-7 7' />
-							</svg>
-						</button>
-						<button className='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0'>
-							SignUp
-							<svg
-								fill='none'
-								stroke='currentColor'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								strokeWidth={2}
-								className='w-4 h-4 ml-1'
-								viewBox='0 0 24 24'>
-								<path d='M5 12h14M12 5l7 7-7 7' />
-							</svg>
-						</button>
+						{!isLogedIn ? (
+							<div>
+								<a
+									href='/login'
+									className='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0'>
+									Login
+									<svg
+										fill='none'
+										stroke='currentColor'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth={2}
+										className='w-4 h-4 ml-1'
+										viewBox='0 0 24 24'>
+										<path d='M5 12h14M12 5l7 7-7 7' />
+									</svg>
+								</a>
+								<a
+									href='/signup'
+									className='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0'>
+									SignUp
+									<svg
+										fill='none'
+										stroke='currentColor'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth={2}
+										className='w-4 h-4 ml-1'
+										viewBox='0 0 24 24'>
+										<path d='M5 12h14M12 5l7 7-7 7' />
+									</svg>
+								</a>
+							</div>
+						) : (
+							<button
+								onClick={handleLogout}
+								className='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0'>
+								Logout
+								<svg
+									fill='none'
+									stroke='currentColor'
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									strokeWidth={2}
+									className='w-4 h-4 ml-1'
+									viewBox='0 0 24 24'>
+									<path d='M5 12h14M12 5l7 7-7 7' />
+								</svg>
+							</button>
+						)}
 					</div>
 				</header>
 			</div>

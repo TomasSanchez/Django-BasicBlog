@@ -1,11 +1,15 @@
-from .views import LoggedInUserDetail, UserDetail, UserList, UserCreate
 from django.urls import path
+from .views import LoggedInUserDetail, UserDetail, UserList, CreateUser, Me, get_csrf, login_view, logout_view
 
 app_name = 'users'
 
 urlpatterns = [
     path('', UserList.as_view(), name='user_list'),
-    path('create', UserCreate.as_view(), name='user_create'),
+    path('get_csrf', get_csrf, name='get_csrf'),
+    path('login', login_view, name='login'),
+    path('logout', logout_view, name='logout'),
+    path('create', CreateUser.as_view(), name='create'),
+    path('me', Me.as_view(), name='check_current_user'),
     path('<int:pk>',UserDetail.as_view(), name='user_detail'),          # RetrieveUpdateDestroy a user
     path('profile',LoggedInUserDetail.as_view(), name='user_detail'),   # Returns detail information of the current authenticated user
 ]

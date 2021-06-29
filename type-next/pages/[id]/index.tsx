@@ -1,10 +1,28 @@
 import Post from "../../components/Post";
 import Comment from "../../components/Comments";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { commentType } from "../../types/commentTypes";
+import { postType } from "../../types/postTypes";
 
-const PostDetail = ({ post, comments }: any) => {
+type propType = {
+	post: postType;
+};
+
+const PostDetail = ({ post }: propType) => {
+	const [comments, setComments] = useState<commentType[]>();
+	console.log();
+
+	const get_comments = async () => {
+		const commentResponse = await fetch(
+			`http://127.0.0.1:8000/api/${post.id}/comment`
+		);
+		const comments = await commentResponse.json();
+		setComments(comments);
+	};
+	console.log("comments from index: ", comments);
+
 	useEffect(() => {
-		console.log(localStorage);
+		get_comments();
 	}, []);
 
 	return (
@@ -16,7 +34,11 @@ const PostDetail = ({ post, comments }: any) => {
 					</div>
 				</div>
 			</section>
-			<Comment comments={comments} />
+			<Comment
+				comments={comments}
+				post_id={post.id}
+				get_comments={get_comments}
+			/>
 		</div>
 	);
 };
@@ -27,14 +49,8 @@ export const getStaticProps = async (context: any) => {
 			`http://127.0.0.1:8000/api/${context.params.id}`
 		);
 		const post = await postResponse.json();
-
-		const commentResponse = await fetch(
-			`http://127.0.0.1:8000/api/${post.id}/comment`
-		);
-		const comments = await commentResponse.json();
-
 		return {
-			props: { post, comments },
+			props: { post },
 		};
 	} catch (error) {
 		return {
@@ -46,8 +62,9 @@ export const getStaticProps = async (context: any) => {
 export const getStaticPaths = async () => {
 	const response = await fetch(`http://127.0.0.1:8000/api`);
 	const posts = await response.json();
-	const ids = posts.map((post: any) => post.id);
-	const paths = ids.map((id: any) => ({ params: { id: id.toString() } }));
+
+	const ids = posts.map((post: postType) => post.id);
+	const paths = ids.map((id: number) => ({ params: { id: id.toString() } }));
 
 	return {
 		paths,
