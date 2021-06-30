@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import Router from "next/router";
 import { ContextAuth } from "../context/AuthContext";
-import Modal from "./Modal";
+import AddPostModal from "./AddPostModal";
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
@@ -51,13 +51,7 @@ const Navbar = () => {
 								onClick={() => setOpen(true)}
 								className='mr-5 hover:text-white'>
 								Modal test
-								<Modal
-									open={open}
-									setOpen={setOpen}
-									message={"hola desde nav"}
-									title={"title1"}
-									danger={false}
-								/>
+								<AddPostModal open={open} setOpen={setOpen} />
 							</button>
 						</nav>
 						{!isLogedIn ? (

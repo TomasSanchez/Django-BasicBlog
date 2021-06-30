@@ -10,7 +10,9 @@ type propType = {
 };
 
 const PostDetail = ({ post }: propType) => {
-	const { get_comments, comments } = useContext(ContextPost);
+	const { get_comments, comments, hasLiked, isOwner, handleLike } =
+		useContext(ContextPost);
+
 	useEffect(() => {
 		get_comments(post.id);
 	}, []);

@@ -1,56 +1,18 @@
 import { useContext } from "react";
 import { postType } from "../types/postTypes";
 import { ContextAuth } from "../context/AuthContext";
+import { ContextPost } from "../context/PostsContext";
 import { likes_usernamesTypes, authorType } from "../types/commentTypes";
 import PostOptionDropdown from "./PostOptionsDropdown";
 
 type propType = {
 	blogs: postType[];
-	get_posts: VoidFunction;
 };
 
-const Blogs = ({ blogs, get_posts }: propType) => {
+const Blogs = ({ blogs }: propType) => {
 	const { isLogedIn, csrfToken, user } = useContext(ContextAuth);
-
-	const liked =
-		"text-red-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50";
-	const not_liked =
-		"text-gray-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50";
-
-	const hasLiked: (likes_usernames: likes_usernamesTypes[]) => boolean = (
-		likes_usernames: likes_usernamesTypes[]
-	) => {
-		return likes_usernames.some(
-			(liked_user: likes_usernamesTypes) =>
-				liked_user.user_id === user?.id
-		);
-	};
-
-	const handleLike = async (post_id: number) => {
-		if (isLogedIn) {
-			const response = await fetch(
-				`http://localhost:8000/api/${post_id}/post_like`,
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"X-CSRFToken": csrfToken,
-					},
-					method: "PUT",
-					credentials: "include",
-				}
-			);
-			if (response.ok) {
-				console.log("message liked");
-				get_posts();
-			}
-		} else {
-			// open modal to log in
-		}
-	};
-
-	const isOwner: (author_id: number) => boolean = (author_id: number) => {
-		return user?.id === author_id;
-	};
+	const { handleLike, hasLiked, isOwner, liked, not_liked } =
+		useContext(ContextPost);
 
 	return (
 		<section className='text-gray-400 bg-gray-900 body-font overflow-hidden'>

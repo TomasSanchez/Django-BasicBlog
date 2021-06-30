@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef, useContext } from "react";
+import { Fragment, useRef, useContext, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ExclamationIcon, AtSymbolIcon } from "@heroicons/react/outline";
+import { ExclamationIcon, CheckIcon } from "@heroicons/react/outline";
 import { ContextAuth } from "../context/AuthContext";
 
 type propType = {
@@ -20,7 +20,6 @@ export default function Modal({
 	danger,
 }: propType) {
 	const cancelButtonRef = useRef(null);
-	const { isLogedIn } = useContext(ContextAuth);
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
@@ -67,7 +66,7 @@ export default function Modal({
 												aria-hidden='true'
 											/>
 										) : (
-											<AtSymbolIcon />
+											<CheckIcon />
 										)}
 									</div>
 

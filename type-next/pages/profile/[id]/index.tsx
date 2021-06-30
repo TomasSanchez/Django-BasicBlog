@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import Blogs from "../../../components/Blogs";
+import { ContextPost } from "../../../context/PostsContext";
 import { postType } from "../../../types/postTypes";
 import { userType } from "../../../types/userTypes";
 
@@ -8,6 +10,9 @@ type propType = {
 };
 
 const profile = ({ user, userPosts }: propType) => {
+	const { handleLike, hasLiked, isOwner, liked, not_liked } =
+		useContext(ContextPost);
+
 	return (
 		<div>
 			<section className='text-gray-400 bg-gray-900 body-font'>

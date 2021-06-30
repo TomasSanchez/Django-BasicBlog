@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { ContextPost } from "../context/PostsContext";
 import { postType } from "../types/postTypes";
 
 type propType = {
@@ -5,6 +7,8 @@ type propType = {
 };
 
 const Post = ({ post }: propType) => {
+	const { hasLiked, isOwner, handleLike } = useContext(ContextPost);
+
 	return (
 		<div className='py-8 flex flex-wrap md:flex-nowrap'>
 			<div className='md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col'>
@@ -25,19 +29,21 @@ const Post = ({ post }: propType) => {
 				</p>
 				<div className='py-4 flex'>
 					<span className='text-gray-500 mr-3 inline-flex items-center leading-none text-sm pr-3 border-r-2 border-gray-700 border-opacity-50'>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							className='h-6 w-6'
-							fill='none'
-							viewBox='0 0 24 24'
-							stroke='currentColor'>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								strokeWidth={2}
-								d='M5 15l7-7 7 7'
-							/>
-						</svg>
+						<button onClick={() => handleLike(post.id)}>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								className='h-6 w-6'
+								fill='none'
+								viewBox='0 0 24 24'
+								stroke='currentColor'>
+								<path
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									strokeWidth={2}
+									d='M5 15l7-7 7 7'
+								/>
+							</svg>
+						</button>
 						{post.likes}
 					</span>
 					<span className='text-gray-500 inline-flex items-center leading-none text-sm'>
