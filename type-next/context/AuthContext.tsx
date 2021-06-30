@@ -2,11 +2,20 @@ import { useEffect, useState } from "react";
 import { createContext } from "react";
 import Cookies from "../ui/js-cookie/src/js.cookie";
 
+type userType = {
+	id: number;
+	email: string;
+	user_name: string;
+	first_name: string;
+	last_name: string;
+};
+
 type AuthProps = {
 	isLogedIn: boolean;
 	setIsLogedIn: (value: boolean) => void;
 	csrfToken: string;
 	setCsrfToken: (value: string) => void;
+	user: userType | undefined;
 	//  updateLogin : (value: boolean) => void;
 };
 
@@ -15,6 +24,7 @@ export const ContextAuth = createContext<AuthProps>({
 	setIsLogedIn: (value: boolean) => {},
 	csrfToken: "",
 	setCsrfToken: (value: string) => {},
+	user: undefined,
 	// updateLogin: (value: boolean) => {},
 });
 
@@ -22,6 +32,7 @@ const AuthContext = ({ children }: any) => {
 	// const [{ isAuthenticated }, dispatch] = useReducer(reducer, initialState);
 	const [isLogedIn, setIsLogedIn] = useState<boolean>(false);
 	const [csrfToken, setCsrfToken] = useState<string>("");
+	const [user, setUser] = useState();
 	const updateLogin = (value: boolean) => {
 		setIsLogedIn(value);
 	};
@@ -31,6 +42,7 @@ const AuthContext = ({ children }: any) => {
 		setIsLogedIn,
 		csrfToken,
 		setCsrfToken,
+		user,
 		// updateLogin
 	};
 
@@ -46,6 +58,7 @@ const AuthContext = ({ children }: any) => {
 		if (jsRes[0] !== "AnonymousUser") {
 			setIsLogedIn(true);
 			setCsrfToken(Cookies.get("csrftoken"));
+			setUser(jsRes);
 		}
 	};
 	useEffect(() => {

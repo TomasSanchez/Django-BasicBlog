@@ -1,15 +1,62 @@
+import { useContext } from "react";
 import { postType } from "../types/postTypes";
+import { ContextAuth } from "../context/AuthContext";
+import { likes_usernamesTypes, authorType } from "../types/commentTypes";
+import PostOptionDropdown from "./PostOptionsDropdown";
 
 type propType = {
 	blogs: postType[];
+	get_posts: VoidFunction;
 };
 
-const Blogs = ({ blogs }: propType) => {
+const Blogs = ({ blogs, get_posts }: propType) => {
+	const { isLogedIn, csrfToken, user } = useContext(ContextAuth);
+
+	const liked =
+		"text-red-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50";
+	const not_liked =
+		"text-gray-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50";
+
+	const hasLiked: (likes_usernames: likes_usernamesTypes[]) => boolean = (
+		likes_usernames: likes_usernamesTypes[]
+	) => {
+		return likes_usernames.some(
+			(liked_user: likes_usernamesTypes) =>
+				liked_user.user_id === user?.id
+		);
+	};
+
+	const handleLike = async (post_id: number) => {
+		if (isLogedIn) {
+			const response = await fetch(
+				`http://localhost:8000/api/${post_id}/post_like`,
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken,
+					},
+					method: "PUT",
+					credentials: "include",
+				}
+			);
+			if (response.ok) {
+				console.log("message liked");
+				get_posts();
+			}
+		} else {
+			// open modal to log in
+		}
+	};
+
+	const isOwner: (author_id: number) => boolean = (author_id: number) => {
+		return user?.id === author_id;
+	};
+
 	return (
 		<section className='text-gray-400 bg-gray-900 body-font overflow-hidden'>
 			<div className='container px-5 py-24 mx-auto'>
 				<div className='-my-8 divide-y-2 divide-gray-800'>
-					{blogs.map((post: postType) => (
+					{blogs?.map((post: postType) => (
 						<div
 							className='py-8 flex flex-wrap md:flex-nowrap'
 							key={post.id}>
@@ -27,28 +74,55 @@ const Blogs = ({ blogs }: propType) => {
 								</span>
 							</div>
 							<div className='md:flex-grow'>
-								<h2 className='text-2xl font-medium text-white title-font mb-2'>
-									{post.title}
-								</h2>
+								<div className='flex flex-row'>
+									<h2 className='text-2xl font-medium text-white title-font mb-2'>
+										{post.title}
+									</h2>
+
+									<div className='text-gray-500 ml-2 flex-1 text-right text-sm leading-7'>
+										{isOwner(post.author.user_id) ? (
+											<PostOptionDropdown />
+										) : (
+											<div></div>
+										)}
+									</div>
+								</div>
+
 								<p className='leading-relaxed overflow-ellipsis '>
 									{post.content}
 								</p>
-								<div className='py-4'>
-									<span className='text-gray-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50'>
-										<svg
-											className='w-4 h-4 mr-1'
-											stroke='currentColor'
-											strokeWidth={2}
-											fill='none'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											viewBox='0 0 24 24'>
-											<path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z' />
-											<circle cx={12} cy={12} r={3} />
-										</svg>
-										{post.likes}
-									</span>
-									<span className='text-gray-500 inline-flex items-center leading-none text-sm'>
+								<div className='pt-3 flex'>
+									<button
+										onClick={() => {
+											handleLike(post.id),
+												console.log(
+													"post.likes_usernames: ",
+													post.likes_usernames
+												);
+										}}>
+										<span
+											className={
+												hasLiked(post.likes_usernames)
+													? liked
+													: not_liked
+											}>
+											<svg
+												xmlns='http://www.w3.org/2000/svg'
+												className='h-6 w-6'
+												fill='none'
+												viewBox='0 0 24 24'
+												stroke='currentColor'>
+												<path
+													strokeLinecap='round'
+													strokeLinejoin='round'
+													strokeWidth={2}
+													d='M5 15l7-7 7 7'
+												/>
+											</svg>
+											{post.likes}
+										</span>
+									</button>
+									<span className='text-gray-500 inline-flex items-center leading-none text-sm pr-3 py-1 border-gray-700 border-opacity-50'>
 										<svg
 											className='w-4 h-4 mr-1'
 											stroke='currentColor'
@@ -61,24 +135,25 @@ const Blogs = ({ blogs }: propType) => {
 										</svg>
 										{post.nbr_of_comments}
 									</span>
-								</div>
 
-								<a
-									className='text-indigo-400 inline-flex items-center mt-4'
-									href={`/${post.id}`}>
-									View Post
-									<svg
-										className='w-4 h-4 ml-2'
-										viewBox='0 0 24 24'
-										stroke='currentColor'
-										strokeWidth={2}
-										fill='none'
-										strokeLinecap='round'
-										strokeLinejoin='round'>
-										<path d='M5 12h14' />
-										<path d='M12 5l7 7-7 7' />
-									</svg>
-								</a>
+									<a
+										className='text-indigo-400 inline-flex items-center py-1'
+										href={`/${post.id}`}>
+										View Post
+										<svg
+											className='w-4 h-4 ml-2'
+											viewBox='0 0 24 24'
+											stroke='currentColor'
+											strokeWidth={2}
+											fill='none'
+											strokeLinecap='round'
+											strokeLinejoin='round'>
+											<path d='M5 12h14' />
+											<path d='M12 5l7 7-7 7' />
+										</svg>
+									</a>
+								</div>
+								{/* emd */}
 							</div>
 						</div>
 					))}

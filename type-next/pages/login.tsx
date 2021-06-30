@@ -1,7 +1,7 @@
 import { useEffect, useState, SyntheticEvent, useContext } from "react";
 import Cookies from "../ui/js-cookie";
 import Router from "next/router";
-import { ContextAuth } from "../components/AuthContext";
+import { ContextAuth } from "../context/AuthContext";
 
 const login = () => {
 	const { isLogedIn, setIsLogedIn, csrfToken, setCsrfToken } =
@@ -50,13 +50,12 @@ const login = () => {
 	useEffect(() => {
 		get_csrf();
 		console.log("islogedIN from uE: ", isLogedIn);
-
-		if (isLogedIn) {
-			console.log("this ran");
-
-			Router.push("/");
-		}
 	}, []);
+	if (isLogedIn) {
+		console.log("this ran");
+
+		Router.push("/");
+	}
 	console.log("islogedIN from outside uE: ", isLogedIn);
 
 	return isLogedIn ? (

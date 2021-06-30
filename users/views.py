@@ -102,5 +102,7 @@ class Me(APIView):
     @staticmethod
     def get(request, format=None):
         if request.user.is_authenticated:
-            return Response({request.user.first_name, request.user.last_name})
+            user = request.user
+            return Response({ 'id':user.id, 'email':user.email, 'user_name':user.user_name,
+                            'first_name':user.first_name, 'last_name':user.last_name})
         return Response({'AnonymousUser'})

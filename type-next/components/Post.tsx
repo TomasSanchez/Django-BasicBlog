@@ -12,7 +12,8 @@ const Post = ({ post }: propType) => {
 					By: {post.author.user_name}
 				</span>
 				<span className='mt-1 text-gray-500 text-sm'>
-					{post.published}
+					{post.published.split("T")[0]}{" "}
+					{post.published.split("T")[1].split(".")[0]}
 				</span>
 			</div>
 			<div className='md:flex-grow'>
@@ -22,18 +23,20 @@ const Post = ({ post }: propType) => {
 				<p className='leading-relaxed overflow-ellipsis '>
 					{post.content}
 				</p>
-				<div className='py-4'>
-					<span className='text-gray-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50'>
+				<div className='py-4 flex'>
+					<span className='text-gray-500 mr-3 inline-flex items-center leading-none text-sm pr-3 border-r-2 border-gray-700 border-opacity-50'>
 						<svg
-							className='w-4 h-4 mr-1'
-							stroke='currentColor'
-							strokeWidth={2}
+							xmlns='http://www.w3.org/2000/svg'
+							className='h-6 w-6'
 							fill='none'
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							viewBox='0 0 24 24'>
-							<path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z' />
-							<circle cx={12} cy={12} r={3} />
+							viewBox='0 0 24 24'
+							stroke='currentColor'>
+							<path
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth={2}
+								d='M5 15l7-7 7 7'
+							/>
 						</svg>
 						{post.likes}
 					</span>

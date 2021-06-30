@@ -1,10 +1,11 @@
-import Link from "next/link";
-import React, { useContext } from "react";
-import Cookies from "../ui/js-cookie";
+import React, { useContext, useState } from "react";
 import Router from "next/router";
-import { ContextAuth } from "./AuthContext";
+import { ContextAuth } from "../context/AuthContext";
+import Modal from "./Modal";
 
 const Navbar = () => {
+	const [open, setOpen] = useState(false);
+
 	const { isLogedIn, setIsLogedIn, csrfToken } = useContext(ContextAuth);
 
 	const handleLogout = async () => {
@@ -40,11 +41,24 @@ const Navbar = () => {
 							<span className='ml-3 text-xl'>Blogs</span>
 						</a>
 						<nav className='md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-700	flex flex-wrap items-center text-base justify-center'>
-							<a href='/login' className='mr-5 hover:text-white'>
-								Login
+							<a
+								href='/create'
+								hidden={!isLogedIn}
+								className='mr-5 hover:text-white'>
+								Create Post
 							</a>
-							<a className='mr-5 hover:text-white'>Second Link</a>
-							<a className='mr-5 hover:text-white'>Create Post</a>
+							<button
+								onClick={() => setOpen(true)}
+								className='mr-5 hover:text-white'>
+								Modal test
+								<Modal
+									open={open}
+									setOpen={setOpen}
+									message={"hola desde nav"}
+									title={"title1"}
+									danger={false}
+								/>
+							</button>
 						</nav>
 						{!isLogedIn ? (
 							<div>

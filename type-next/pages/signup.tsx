@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import Router from "next/router";
 import { SyntheticEvent } from "react";
-import { ContextAuth } from "../components/AuthContext";
+import { ContextAuth } from "../context/AuthContext";
 
 const signup = () => {
 	const [emailError, setEmailError] = useState("");

@@ -1,11 +1,11 @@
 import { SyntheticEvent } from "react";
 import { useContext, useState } from "react";
 import { commentType } from "../types/commentTypes";
-import { ContextAuth } from "./AuthContext";
+import { ContextAuth } from "../context/AuthContext";
 
 type propType = {
 	post_id: number;
-	get_comments: VoidFunction;
+	get_comments: (value: number) => void;
 };
 
 const AddComment = ({ post_id, get_comments }: propType) => {
@@ -36,7 +36,7 @@ const AddComment = ({ post_id, get_comments }: propType) => {
 					console.log("comment created succesfully");
 					// ADD modal to comment created
 					setComment("");
-					get_comments();
+					get_comments(post_id);
 				} else {
 					setError("Couldnt post comment, please try again");
 					throw new Error(error);

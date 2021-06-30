@@ -1,28 +1,18 @@
 import Post from "../../components/Post";
 import Comment from "../../components/Comments";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { commentType } from "../../types/commentTypes";
 import { postType } from "../../types/postTypes";
+import { ContextPost } from "../../context/PostsContext";
 
 type propType = {
 	post: postType;
 };
 
 const PostDetail = ({ post }: propType) => {
-	const [comments, setComments] = useState<commentType[]>();
-	console.log();
-
-	const get_comments = async () => {
-		const commentResponse = await fetch(
-			`http://127.0.0.1:8000/api/${post.id}/comment`
-		);
-		const comments = await commentResponse.json();
-		setComments(comments);
-	};
-	console.log("comments from index: ", comments);
-
+	const { get_comments, comments } = useContext(ContextPost);
 	useEffect(() => {
-		get_comments();
+		get_comments(post.id);
 	}, []);
 
 	return (
