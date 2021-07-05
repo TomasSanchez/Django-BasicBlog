@@ -43,14 +43,15 @@ const Navbar = () => {
 						<nav className='md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-700	flex flex-wrap items-center text-base justify-center'>
 							<a
 								href='/create'
-								hidden={!isLogedIn}
+								hidden={true}
+								// hidden={!isLogedIn}
 								className='mr-5 hover:text-white'>
 								Create Post
 							</a>
 							<button
 								onClick={() => setOpen(true)}
 								className='mr-5 hover:text-white'>
-								Modal test
+								Create Post
 								<AddPostModal open={open} setOpen={setOpen} />
 							</button>
 						</nav>

@@ -72,7 +72,7 @@ const signup = () => {
 			</a>
 		</div>
 	) : (
-		<div className='bg-gray-900 p-8 flex flex-col md:ml-auto w-full mt-10 px-56 md:mt-0 height: 81.99vh;'>
+		<div className='bg-gray-900 p-8 flex flex-col md:ml-auto w-full mt-10 px-56 md:mt-0 height: 81.99vh; container m-auto'>
 			<form action='' onSubmit={handleSubmit}>
 				<h2 className='text-white text-lg font-medium title-font mb-5'>
 					Sign Up
