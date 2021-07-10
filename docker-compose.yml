@@ -1,0 +1,87 @@
+version: "3"
+
+services:
+    nginx: # service name
+        image: nginx:latest
+        # build: ./nginx # location of the dockerfile that defines the nginx image. The dockerfile will be used to spin up an image during the build stage
+        container_name: blog_app_nginx
+        ports:
+            - 80:8080 # 1339:80 map the external port 1339 to the internal port 80. Any traffic from 1339 externally will be passed to port 80 of the NGINX container. To access this app, one would use an address such as 0.0.0.0:1339
+        volumes: # static storages provisioned since django does not handle static files in production
+            - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+            # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+
+            # - next_build:/var/www/next #next
+            - react_build:/var/www/next #react
+            # - static_volume:/home/app/microservice/static # provide a space for static files
+        depends_on:
+            - backend # will only start if web is up and running
+            - frontend
+        restart: "on-failure" # restart service when it fails
+
+    backend:
+        build: ./Django
+        # command: bash -c " cd Django/ && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic && python manage.py runserver 0.0.0.0:8000"
+        command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn core.wsgi --bind 0.0.0.0:8000"
+        restart: "on-failure"
+        container_name: blog_app_backend
+        image: django_blog_app_backend # name of the image
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./Django:/backend
+        # env_file: # file where env variables are stored. Used as best practice so as not to expose secret keys
+        #     - /Django/
+        expose:
+            # - ${APP_PORT}
+            - 8000
+        depends_on:
+            - db
+
+    #next
+    # frontend:
+    #     build: ./client
+    #     command: bash -c " npm run start "
+    #     restart: "on-failure"
+    #     container_name: blog_app_frontend
+    #     image: django_blog_app_frontend # name of the image
+    #     ports:
+    #         - "3000:3000"
+    #     depends_on:
+    #         - backend
+    #     # volumes:
+    #     volumes:
+    #         # - .client:/frontend
+    #         # build directory for nginx TESTing
+    #         - next_build:/frontend/.next # for npm run build
+    #         # - next_build:/frontend/out # for npm run export
+
+    #react
+    frontend:
+        build: ./reactclient
+        command: bash -c " npm run start "
+        restart: "on-failure"
+        container_name: blog_app_frontend
+        image: django_blog_app_frontend # name of the image
+        ports:
+            - "3000:3000"
+        depends_on:
+            - backend
+        # volumes:
+        volumes:
+            - .reactclient:/frontend
+            - react_build:/frontend/build
+
+    db:
+        image: postgres
+        container_name: postgres_db
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+        environment:
+            # - POSTGRES_DB=postgres
+            # - POSTGRES_USER=postgres
+            # - POSTGRES_PASSWORD=postgres
+            - POSTGRES_HOST_AUTH_METHOD=trust
+volumes:
+    # next_build: #next
+    react_build: #react

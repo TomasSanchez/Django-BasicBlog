@@ -1,0 +1,120 @@
+*** ./docker-compose.yml ***
+
+version: "3"
+
+# nginx: # service name
+#     image: nginx:latest
+#     build: ./nginx # location of the dockerfile that defines the nginx image. The dockerfile will be used to spin up an image during the build stage
+#     ports:
+#         - 80:8080 # 1339:80 map the external port 1339 to the internal port 80. Any traffic from 1339 externally will be passed to port 80 of the NGINX container. To access this app, one would use an address such as 0.0.0.0:1339
+#     volumes: # static storages provisioned since django does not handle static files in production
+#         - ./nginx/nginx.conf:/
+#         - static_volume:/home/app/microservice/static # provide a space for static files
+#     depends_on:
+#         - backend # will only start if web is up and running
+#         - frontend
+#     restart: "on-failure" # restart service when it fails
+services:
+    backend:
+        build: ./Django
+        # command: bash -c " cd Django/ && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic && python manage.py runserver 0.0.0.0:8000"
+        command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn core.wsgi --bind 0.0.0.0:8000"
+        restart: "on-failure"
+        container_name: blog_app_backend
+        image: django_blog_app_backend # name of the image
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./Django:/backend
+        # env_file: # file where env variables are stored. Used as best practice so as not to expose secret keys
+        #     - /Django/
+        expose:
+            # - ${APP_PORT}
+            - 8000
+        depends_on:
+            - db
+    frontend:
+        build: ./client
+        command: bash -c " npm run start "
+        restart: "on-failure"
+        container_name: blog_app_frontend
+        image: django_blog_app_frontend # name of the image
+        ports:
+            - "3000:3000"
+        depends_on:
+            - backend
+        # volumes:
+          volumes:
+            - .client:/frontend
+            # build directory for nginx TESTing
+            - next_build:/frontend/.next
+    db:
+        image: postgres
+        container_name: postgres_db
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+        environment:
+            # - POSTGRES_DB=postgres
+            # - POSTGRES_USER=postgres
+            # - POSTGRES_PASSWORD=postgres
+            - POSTGRES_HOST_AUTH_METHOD=trust
+
+
+
+
+
+*** ./nginx/nginx.conf ***
+
+
+upstream django_blog { # name of our web image
+    server web:8000; # default django port
+}
+
+server {
+    
+    listen 80; # default external port. Anything coming from port 80 will go through NGINX
+
+    location / {
+        proxy_pass http://microservice_app;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+    }
+    location /static/ {
+        alias /home/app/microservice/static/; # where our static files are hosted
+    }
+
+}
+
+upstream api {
+    server backend:8000;
+}
+upstream fe {
+    server frontend:3000;
+}
+
+server {
+    listen 8080;
+
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+
+# works but doesnt fetch
+    # location / {
+    #     proxy_pass http://fe;
+    #     proxy_set_header Upgrade $http_host;
+    # }
+    location / {
+        root /var/www/next;
+    }
+
+# working without css 
+    location /api/ {
+        proxy_pass http://api;
+        proxy_set_header Upgrade $http_host;
+    }
+
+}
