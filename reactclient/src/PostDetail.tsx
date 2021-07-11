@@ -1,15 +1,14 @@
 import Post from "./components/Post";
 import Comment from "./components/Comments";
 import { useContext, useEffect, useState } from "react";
-import { commentType } from "./types/commentTypes";
 import { postType } from "./types/postTypes";
 import { ContextPost } from "./context/PostsContext";
 import { useParams } from "react-router-dom";
 
 const PostDetail = () => {
 	const [post, setPost] = useState<postType>();
-	const { get_comments, comments, hasLiked, isOwner, handleLike } =
-		useContext(ContextPost);
+	const { get_comments, comments } = useContext(ContextPost);
+	const { id } = useParams<{ id: string }>();
 
 	const get_post = async (id: string) => {
 		try {
@@ -20,13 +19,12 @@ const PostDetail = () => {
 			console.error(error);
 		}
 	};
-	const { id } = useParams<{ id: string }>();
-	console.log("id from postdetail: ", id);
 
 	useEffect(() => {
 		get_post(id);
 		get_comments(id);
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [id]);
 
 	return (
 		<div className=''>

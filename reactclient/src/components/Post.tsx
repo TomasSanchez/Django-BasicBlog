@@ -7,7 +7,7 @@ type propType = {
 };
 
 const Post = ({ post }: propType) => {
-	const { hasLiked, isOwner, handleLike } = useContext(ContextPost);
+	const { handleLike } = useContext(ContextPost);
 
 	return (
 		<div className='py-8 flex flex-wrap md:flex-nowrap'>

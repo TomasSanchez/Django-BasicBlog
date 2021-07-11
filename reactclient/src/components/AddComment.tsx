@@ -1,6 +1,5 @@
 import { SyntheticEvent } from "react";
 import { useContext, useState } from "react";
-import { commentType } from "../types/commentTypes";
 import { ContextAuth } from "../context/AuthContext";
 
 type propType = {

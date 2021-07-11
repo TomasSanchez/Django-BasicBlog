@@ -28,7 +28,7 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 				credentials: "include",
 				body: JSON.stringify(post),
 			});
-			const jsres = await response.json();
+
 			if (response.ok) {
 				get_posts();
 				alert("success");

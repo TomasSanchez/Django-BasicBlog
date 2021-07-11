@@ -9,4 +9,11 @@ urlpatterns = [
     path('api/', include('blog.urls', namespace='blog')),
     path('api/users/', include('users.urls', namespace='users')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS) + 
+
+# if settings.DEBUG: 
+#     urlpatterns += static(
+#         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+#     ),

@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { postType } from "../types/postTypes";
-import { ContextAuth } from "../context/AuthContext";
+
 import { ContextPost } from "../context/PostsContext";
-import { likes_usernamesTypes, authorType } from "../types/commentTypes";
+
 import PostOptionDropdown from "./PostOptionsDropdown";
 
 type propType = {
@@ -10,7 +10,6 @@ type propType = {
 };
 
 const Blogs = ({ blogs }: propType) => {
-	const { isLogedIn, csrfToken, user } = useContext(ContextAuth);
 	const { handleLike, hasLiked, isOwner, liked, not_liked } =
 		useContext(ContextPost);
 

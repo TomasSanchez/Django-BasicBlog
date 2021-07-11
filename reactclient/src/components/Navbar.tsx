@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-// import Router from "next/router";
 import { ContextAuth } from "../context/AuthContext";
 import AddPostModal from "./AddPostModal";
 

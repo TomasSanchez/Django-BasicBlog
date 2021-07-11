@@ -1,8 +1,8 @@
-import { commentType } from "../types/commentTypes";
-import AddComment from "./AddComment";
-import { ContextAuth } from "../context/AuthContext";
 import { useContext } from "react";
+import { ContextAuth } from "../context/AuthContext";
+import { commentType } from "../types/commentTypes";
 import { likes_usernamesTypes } from "../types/commentTypes";
+import AddComment from "./AddComment";
 import PostOptionDropdown from "./PostOptionsDropdown";
 
 type propType = {

@@ -2,10 +2,6 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 
-function classNames(...classes: any) {
-	return classes.filter(Boolean).join(" ");
-}
-
 export default function PostOptionDropdown() {
 	return (
 		<Menu as='div' className='relative inline-block text-left'>
@@ -42,7 +38,7 @@ export default function PostOptionDropdown() {
 								<Menu.Item>
 									{({ active }) => (
 										<a
-											href='#'
+											href='/'
 											className='text-gray-300 block px-4 py-2 text-sm hover:bg-gray-400 hover:text-gray-900'>
 											Delete
 										</a>
@@ -51,7 +47,7 @@ export default function PostOptionDropdown() {
 								<Menu.Item>
 									{({ active }) => (
 										<a
-											href='#'
+											href='/'
 											className='text-gray-300 block px-4 py-2 text-sm hover:bg-gray-400 hover:text-gray-900'>
 											Edit
 										</a>
@@ -60,7 +56,7 @@ export default function PostOptionDropdown() {
 								<Menu.Item>
 									{({ active }) => (
 										<a
-											href='#'
+											href='/'
 											className='text-gray-300 block px-4 py-2 text-sm hover:bg-gray-400 hover:text-gray-900'>
 											Else
 										</a>

@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Blogs from "./components/Blogs";
-import { ContextPost } from "./context/PostsContext";
+// import { ContextPost } from "./context/PostsContext";
 import { postType } from "./types/postTypes";
 import { userType } from "./types/userTypes";
 import { useParams } from "react-router-dom";
@@ -8,8 +8,9 @@ import { useParams } from "react-router-dom";
 const Profile = () => {
 	const [user, setUser] = useState<userType>();
 	const [userPosts, setUserPosts] = useState<postType[]>();
-	const { handleLike, hasLiked, isOwner, liked, not_liked } =
-		useContext(ContextPost);
+	// const { handleLike, hasLiked, isOwner, liked, not_liked } =
+	// 	useContext(ContextPost);
+	const { id } = useParams<{ id: string }>();
 
 	const get_user_data = async (id: string) => {
 		try {
@@ -28,11 +29,12 @@ const Profile = () => {
 		}
 	};
 
-	const { id } = useParams<{ id: string }>();
-
+	if (user) {
+		document.title = `@ ${user!.user_name} Profile`;
+	}
 	useEffect(() => {
 		get_user_data(id);
-	}, []);
+	}, [id]);
 
 	return !user ? (
 		<div>loading!</div>

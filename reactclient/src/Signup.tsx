@@ -5,6 +5,7 @@ import { ContextAuth } from "./context/AuthContext";
 import Footer from "./components/Footer";
 
 const Signup = () => {
+	document.title = "SignUp";
 	const history = useHistory();
 	const [emailError, setEmailError] = useState("");
 	const [userNameError, setUserNameError] = useState("");
@@ -16,9 +17,7 @@ const Signup = () => {
 		last_name: "",
 		password: "",
 	});
-
-	const { isLogedIn, setIsLogedIn, csrfToken, setCsrfToken } =
-		useContext(ContextAuth);
+	const { isLogedIn, csrfToken } = useContext(ContextAuth);
 
 	const handleSubmit = async (e: SyntheticEvent) => {
 		e.preventDefault();
@@ -32,13 +31,10 @@ const Signup = () => {
 			body: JSON.stringify(user),
 		});
 		const jsres = await response.json();
-		console.log("response before if: ", response);
-		console.log("response.js before if: ", jsres.email);
-		console.log("response.js before if: ", jsres.user_name);
 
 		if (response.ok) {
 			// ADD modal 'acc created succesfully' then redirect
-			// Router.push('/login')
+			history.push("/login");
 		} else {
 			if (jsres.email) {
 				setEmailError("User with this Email already exists");
@@ -77,9 +73,14 @@ const Signup = () => {
 		<div>
 			<div className='bg-gray-900 p-8 flex flex-col md:ml-auto w-full mt-10 px-56 md:mt-0 height: 81.99vh; container m-auto'>
 				<form action='' onSubmit={handleSubmit}>
-					<h2 className='text-white text-lg font-medium title-font mb-5'>
-						Sign Up
-					</h2>
+					<div className='flex flex-row '>
+						<h2 className='text-white text-lg font-medium title-font mb-5'>
+							Sign Up
+						</h2>
+						<div className='text-red-500 ml-2 flex-1 text-right text-sm leading-7'>
+							{generalError}
+						</div>
+					</div>
 					<div className='relative mb-4'>
 						<label
 							htmlFor='full-name'

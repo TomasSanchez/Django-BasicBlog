@@ -51,7 +51,8 @@ const Login = () => {
 
 	useEffect(() => {
 		get_csrf();
-		console.log("islogedIN from uE: ", isLogedIn);
+		document.title = "Login";
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	if (isLogedIn) {
 		console.log("this ran");

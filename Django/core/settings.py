@@ -9,14 +9,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ysrrz_r@gu)t0gn0_o+6igs)(joisplbuyex!b71dvte)w5kdc'
+SECRET_KEY = 'django-insecure-ysrrz_r@gu)t0gn0_o+6igs)(joisplbuyex!b71dvte)w5kdc' #Default
+# SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
-
+# ALLOWED_HOSTS.extend(
+#     filter(
+#         None,
+#         os.environ.get('ALLOWED_HOSTS', '').split(",")
+#     )
+# )
 
 # Application definition
 
@@ -79,11 +85,11 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'db',
-#         'PORT': 5432
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASS'),
+#         'HOST': os.environ.get('DB_HOST'),
+#         # 'PORT': 5432
 #     }
 # }
 
@@ -124,8 +130,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+# django default
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+# STATIC_URL = '/static/static/'
+# MEDIA_URL = '/static/media/'
+
+# MEDIA_ROOT = 'vol/web/media'
+# STATIC_ROOT = 'vol/web/static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

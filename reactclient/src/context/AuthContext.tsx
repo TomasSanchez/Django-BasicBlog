@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
-// import Cookies from "../ui/js-cookie/src/js.cookie";
 import Cookies from "js-cookie";
 
 type userType = {
@@ -17,7 +16,6 @@ type AuthProps = {
 	csrfToken: string | undefined;
 	setCsrfToken: (value: string) => void;
 	user: userType | undefined;
-	//  updateLogin : (value: boolean) => void;
 };
 
 export const ContextAuth = createContext<AuthProps>({
@@ -26,7 +24,6 @@ export const ContextAuth = createContext<AuthProps>({
 	csrfToken: "",
 	setCsrfToken: (value: string) => {},
 	user: undefined,
-	// updateLogin: (value: boolean) => {},
 });
 
 const AuthContext = ({ children }: any) => {
@@ -34,9 +31,6 @@ const AuthContext = ({ children }: any) => {
 	const [isLogedIn, setIsLogedIn] = useState<boolean>(false);
 	const [csrfToken, setCsrfToken] = useState<string | undefined>("");
 	const [user, setUser] = useState();
-	const updateLogin = (value: boolean) => {
-		setIsLogedIn(value);
-	};
 
 	const AuthContextValues = {
 		isLogedIn,
@@ -44,7 +38,6 @@ const AuthContext = ({ children }: any) => {
 		csrfToken,
 		setCsrfToken,
 		user,
-		// updateLogin
 	};
 
 	const get_current_user_or_log_out = async () => {
