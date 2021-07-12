@@ -11,6 +11,9 @@
 # production
 /build
 
+# macOs
+.DS_Store
+
 # misc
 .DS_Store
 .env.local

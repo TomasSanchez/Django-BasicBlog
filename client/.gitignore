@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# macOs
+.DS_Store
+
 # next.js
 /.next/
 /out/

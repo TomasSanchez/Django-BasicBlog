@@ -9,6 +9,9 @@ __pycache__/
 # docker data
 data
 
+# macOs
+.DS_Store
+
 # Distribution / packaging
 .Python
 build/
