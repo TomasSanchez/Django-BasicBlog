@@ -1,14 +1,29 @@
-FROM python:3.6
+FROM python:3
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /backend
 
-COPY requirements.txt requirements.txt
+COPY requirements.txt /backend/
 
-RUN pip3 install -r /backend/requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+
+
+
+# FROM python:3.6
+
+# ENV PYTHONUNBUFFERED 1
+
+# WORKDIR /backend
+
+# COPY requirements.txt requirements.txt
+
+# RUN pip3 install -r /backend/requirements.txt
+
+# COPY . .
 # removed
 # EXPOSE 8000
 

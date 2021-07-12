@@ -41,7 +41,7 @@ const PostsContext = ({ children }: any) => {
 	const get_posts = async () => {
 		try {
 			const response = await fetch("http://127.0.0.1:8000/api/"); // standar development url
-			// const response = await fetch("http://localhost:8080/api/"); nginx testing line
+			// const response = await fetch("http://localhost/api/"); // nginx testing line
 			const blogs = await response.json();
 			setBlog(blogs);
 		} catch (error) {
