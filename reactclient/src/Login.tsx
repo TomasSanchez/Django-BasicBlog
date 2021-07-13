@@ -15,7 +15,7 @@ const Login = () => {
 	const history = useHistory();
 
 	const get_csrf = async () => {
-		await fetch("http://localhost:8000/api/users/get_csrf", {
+		await fetch("/api/users/get_csrf", {
 			credentials: "include",
 		});
 		setCsrfToken(Cookies.get("csrftoken")!);
@@ -24,18 +24,15 @@ const Login = () => {
 	const handleSubmit = async (e: SyntheticEvent) => {
 		e.preventDefault();
 		try {
-			const response = await fetch(
-				"http://localhost:8000/api/users/login",
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"X-CSRFToken": csrfToken!,
-					},
-					method: "POST",
-					credentials: "include",
-					body: JSON.stringify(user),
-				}
-			);
+			const response = await fetch("/api/users/login", {
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrfToken!,
+				},
+				method: "POST",
+				credentials: "include",
+				body: JSON.stringify(user),
+			});
 			if (response.ok) {
 				setIsLogedIn(true);
 				setCsrfToken(Cookies.get("csrftoken")!);

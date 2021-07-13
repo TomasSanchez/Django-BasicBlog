@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-ysrrz_r@gu)t0gn0_o+6igs)(joisplbuyex!b71dvte)w5kdc
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
@@ -55,7 +55,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,14 +134,21 @@ USE_TZ = True
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # STATIC_URL = '/static/'
 
-STATIC_URL = '/static/static/'
-MEDIA_URL = '/static/media/'
+# STATIC_URL = '/static/static/'
+# MEDIA_URL = '/static/media/'
 
 # STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-MEDIA_ROOT = 'vol/web/media'
-STATIC_ROOT = 'vol/web/static'
+# towards serving react+django together
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "build/static"),  # update the STATICFILES_DIRS
+)
+
+# MEDIA_ROOT = 'backend/media/'
+# STATIC_ROOT = 'backend/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -160,7 +167,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5000",
-    "http://127.0.0.1:5000"
+    "http://127.0.0.1:5000",
+    "http://172.18.0.3:3000",
+    "http://localhost:3000",
+    "http://172.*.*.*:3000"
+
 ]
 
 CORS_ALLOW_HEADERS = ['content-disposition', 'accept-encoding',

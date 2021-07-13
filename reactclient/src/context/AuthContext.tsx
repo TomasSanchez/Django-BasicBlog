@@ -41,7 +41,7 @@ const AuthContext = ({ children }: any) => {
 	};
 
 	const get_current_user_or_log_out = async () => {
-		const response = await fetch("http://localhost:8000/api/users/me", {
+		const response = await fetch("/api/users/me", {
 			headers: {
 				"Content-Type": "application/json",
 				// "X-CSRFToken": csrfToken,
