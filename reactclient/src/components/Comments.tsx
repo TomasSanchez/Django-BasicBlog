@@ -31,7 +31,7 @@ const Comments = ({ comments, post_id, get_comments }: propType) => {
 	const handleLike = async (comment_id: number) => {
 		if (isLogedIn) {
 			const response = await fetch(
-				`http://localhost:8000/api/${comment_id}/comment_like`,
+				`http://localhost:8000/api/blog/${comment_id}/comment_like`,
 				{
 					headers: {
 						"Content-Type": "application/json",

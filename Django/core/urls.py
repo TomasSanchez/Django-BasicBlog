@@ -8,9 +8,10 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('blog.urls', namespace='blog')),
+    path('api/blog/', include('blog.urls', namespace='blog')),
     path('api/users/', include('users.urls', namespace='users')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # serving static files trough django    
     path('', TemplateView.as_view(template_name='index.html')),
     path('login', TemplateView.as_view(template_name='index.html')),
     path('<int>', TemplateView.as_view(template_name='index.html')),

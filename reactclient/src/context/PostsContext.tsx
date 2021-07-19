@@ -40,7 +40,8 @@ const PostsContext = ({ children }: any) => {
 
 	const get_posts = async () => {
 		try {
-			const response = await fetch("/api/");
+			const response = await fetch("http://localhost:8000/api/blog/");
+			// const response = await fetch("/api/");
 			const blogs = await response.json();
 			setBlog(blogs);
 		} catch (error) {
@@ -50,7 +51,7 @@ const PostsContext = ({ children }: any) => {
 
 	const get_comments = async (post_id: string) => {
 		const commentResponse = await fetch(
-			`http://localhost:8000/api/${post_id}/comment`
+			`http://localhost:8000/api/blog/${post_id}/comment`
 		);
 		const comments = await commentResponse.json();
 		setComments(comments);
@@ -68,7 +69,7 @@ const PostsContext = ({ children }: any) => {
 	const handleLike = async (post_id: number) => {
 		if (isLogedIn) {
 			const response = await fetch(
-				`http://localhost:8000/api/${post_id}/post_like`,
+				`http://localhost:8000/api/blog/${post_id}/post_like`,
 				{
 					headers: {
 						"Content-Type": "application/json",
@@ -82,7 +83,7 @@ const PostsContext = ({ children }: any) => {
 				get_posts();
 			}
 		} else {
-			// open modal to log in
+			window.alert("please Log in to like!");
 		}
 	};
 

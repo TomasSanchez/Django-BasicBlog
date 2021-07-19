@@ -131,8 +131,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # django default
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
 
 # STATIC_URL = '/static/static/'
 # MEDIA_URL = '/static/media/'
@@ -141,11 +141,11 @@ USE_TZ = True
 # MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # towards serving react+django together
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "build/static"),  # update the STATICFILES_DIRS
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "build/static"),  # update the STATICFILES_DIRS
+# )
 
 # MEDIA_ROOT = 'backend/media/'
 # STATIC_ROOT = 'backend/static/'

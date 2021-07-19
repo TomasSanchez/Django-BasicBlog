@@ -20,7 +20,7 @@ const AddComment = ({ post_id, get_comments }: propType) => {
 		} else {
 			try {
 				const response = await fetch(
-					`http://localhost:8000/api/${post_id}/comment/create`,
+					`http://localhost:8000/api/blog/${post_id}/comment/create`,
 					{
 						headers: {
 							"Content-Type": "application/json",

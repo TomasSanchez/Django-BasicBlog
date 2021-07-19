@@ -9,8 +9,6 @@ const Navbar = () => {
 	const { isLogedIn, setIsLogedIn, csrfToken } = useContext(ContextAuth);
 
 	const handleLogout = async () => {
-		console.log("csrf from navbar logout: ", csrfToken);
-
 		try {
 			const response = await fetch(
 				"http://localhost:8000/api/users/logout",
@@ -26,7 +24,6 @@ const Navbar = () => {
 			if (response.ok) {
 				setIsLogedIn(false);
 				history.push("/");
-				// Router.push("/");
 			}
 		} catch (error) {}
 	};
@@ -42,13 +39,6 @@ const Navbar = () => {
 							<span className='ml-3 text-xl'>Blogs</span>
 						</a>
 						<nav className='md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-700	flex flex-wrap items-center text-base justify-center'>
-							<a
-								href='/create'
-								hidden={true}
-								// hidden={!isLogedIn}
-								className='mr-5 hover:text-white'>
-								Create Post
-							</a>
 							<button
 								onClick={() => setOpen(true)}
 								className='mr-5 hover:text-white'>

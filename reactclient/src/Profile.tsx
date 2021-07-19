@@ -18,7 +18,7 @@ const Profile = () => {
 				`http://localhost:8000/api/users/${id}`
 			);
 			const postsResponse = await fetch(
-				`http://localhost:8000/api/user-posts/${id}`
+				`http://localhost:8000/api/blog/user-posts/${id}`
 			);
 			const user = await userResponse.json();
 			const userPosts = await postsResponse.json();

@@ -12,7 +12,9 @@ const PostDetail = () => {
 
 	const get_post = async (id: string) => {
 		try {
-			const postResponse = await fetch(`http://localhost:8000/api/${id}`);
+			const postResponse = await fetch(
+				`http://localhost:8000/api/blog/${id}`
+			);
 			const post = await postResponse.json();
 			setPost(post);
 		} catch (error) {

@@ -19,15 +19,18 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 		if (!isLogedIn) {
 			alert("not loged");
 		} else {
-			const response = await fetch("http://localhost:8000/api/create", {
-				headers: {
-					"Content-Type": "application/json",
-					"X-CSRFToken": csrfToken!,
-				},
-				method: "POST",
-				credentials: "include",
-				body: JSON.stringify(post),
-			});
+			const response = await fetch(
+				"http://localhost:8000/api/blog/create",
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken!,
+					},
+					method: "POST",
+					credentials: "include",
+					body: JSON.stringify(post),
+				}
+			);
 
 			if (response.ok) {
 				get_posts();

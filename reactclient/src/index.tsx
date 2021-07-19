@@ -9,7 +9,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import PostDetail from "./PostDetail";
 import Profile from "./Profile";
-import "./index.css";
+import "./styles/index.css";
 
 ReactDOM.render(
 	<AuthContext>
