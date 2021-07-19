@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
 import { ContextAuth } from "./context/AuthContext";
 import Footer from "./components/Footer";
+import axiosInstance from "./context/AxiosConfig";
 
 const Login = () => {
 	const { isLogedIn, setIsLogedIn, csrfToken, setCsrfToken } =
@@ -15,8 +16,8 @@ const Login = () => {
 	const history = useHistory();
 
 	const get_csrf = async () => {
-		await fetch("/api/users/get_csrf", {
-			credentials: "include",
+		await axiosInstance.get("/api/users/get_csrf", {
+			withCredentials: true,
 		});
 		setCsrfToken(Cookies.get("csrftoken")!);
 	};
@@ -24,16 +25,16 @@ const Login = () => {
 	const handleSubmit = async (e: SyntheticEvent) => {
 		e.preventDefault();
 		try {
-			const response = await fetch("/api/users/login", {
+			const response = await axiosInstance("/api/users/login", {
 				headers: {
 					"Content-Type": "application/json",
 					"X-CSRFToken": csrfToken!,
 				},
 				method: "POST",
-				credentials: "include",
-				body: JSON.stringify(user),
+				withCredentials: true,
+				data: JSON.stringify(user),
 			});
-			if (response.ok) {
+			if (response.status === 200) {
 				setIsLogedIn(true);
 				setCsrfToken(Cookies.get("csrftoken")!);
 				history.push("/");
@@ -51,18 +52,12 @@ const Login = () => {
 		document.title = "Login";
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	if (isLogedIn) {
-		console.log("this ran");
-
-		history.push("/");
-	}
-	console.log("islogedIN from outside uE: ", isLogedIn);
 
 	return isLogedIn ? (
 		<div className='text-gray-400 bg-gray-900 container px-5 py-24 mx-auto flex flex-wrap items-center'>
 			{" "}
 			You are already logged in! Go to{" "}
-			<a href='/' className='text-red-300 underline ml-1'>
+			<a href='/' className='text-blue-300 underline ml-1'>
 				{" "}
 				Home
 			</a>
@@ -91,7 +86,7 @@ const Login = () => {
 								{error}
 							</h2>
 						)}
-						<form action='' onSubmit={handleSubmit}>
+						<form onSubmit={handleSubmit}>
 							<div className='relative mb-4'>
 								<label
 									htmlFor='email'
@@ -132,8 +127,10 @@ const Login = () => {
 									className='w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-indigo-900 rounded border border-gray-600 focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
 								/>
 							</div>
-							<button className='text-white bg-indigo-700 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg'>
-								Button
+							<button
+								type='submit'
+								className='text-white bg-indigo-700 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg'>
+								Login
 							</button>
 						</form>
 					</div>

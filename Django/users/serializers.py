@@ -19,15 +19,15 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    
+
     liked_posts = serializers.SerializerMethodField('get_liked_posts')
-    
+
     # Remove, getting posts with another fetch gets more info, currently unused
     # user_posts = serializers.SerializerMethodField('get_user_posts')
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'user_name', 'start_date', 'about', 'liked_posts') # 'user_posts')
+        fields = ('id', 'email', 'first_name', 'last_name', 'user_name', 'start_date', 'about', 'liked_posts', 'password') #, 'user_posts')
         extra_kwargs = {'password': {'write_only': True}}
 
     def get_liked_posts(self, user):

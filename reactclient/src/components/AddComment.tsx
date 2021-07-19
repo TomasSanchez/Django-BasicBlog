@@ -1,6 +1,7 @@
 import { SyntheticEvent } from "react";
 import { useContext, useState } from "react";
 import { ContextAuth } from "../context/AuthContext";
+import axiosInstance from "../context/AxiosConfig";
 
 type propType = {
 	post_id: string;
@@ -19,19 +20,19 @@ const AddComment = ({ post_id, get_comments }: propType) => {
 			setNotLogedInError("You need to be logged in order to comment");
 		} else {
 			try {
-				const response = await fetch(
-					`http://localhost:8000/api/blog/${post_id}/comment/create`,
+				const response = await axiosInstance(
+					`/api/blog/${post_id}/comment/create`,
 					{
 						headers: {
 							"Content-Type": "application/json",
 							"X-CSRFToken": csrfToken!,
 						},
 						method: "POST",
-						credentials: "include",
-						body: JSON.stringify({ content: comment }),
+						withCredentials: true,
+						data: JSON.stringify({ content: comment }),
 					}
 				);
-				if (response.ok) {
+				if (response.status === 201) {
 					console.log("comment created succesfully");
 					// ADD modal to comment created
 					setComment("");

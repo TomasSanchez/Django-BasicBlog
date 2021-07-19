@@ -17,21 +17,11 @@ ReactDOM.render(
 			<Navbar />
 			<Router>
 				<Switch>
-					<Route exact path='/'>
-						<App />
-					</Route>
-					<Route path='/login'>
-						<Login />
-					</Route>
-					<Route path='/signup'>
-						<Signup />
-					</Route>
-					<Route exact path='/profile/:id'>
-						<Profile />
-					</Route>
-					<Route exact path='/:id'>
-						<PostDetail />
-					</Route>
+					<Route exact path='/' component={App} />
+					<Route path='/login' component={Login} />
+					<Route path='/signup' component={Signup} />
+					<Route exact path='/profile/:id' component={Profile} />
+					<Route exact path='/:id' component={PostDetail} />
 				</Switch>
 			</Router>
 		</PostsContext>

@@ -4,6 +4,7 @@ import Blogs from "./components/Blogs";
 import { postType } from "./types/postTypes";
 import { userType } from "./types/userTypes";
 import { useParams } from "react-router-dom";
+import axiosInstance from "./context/AxiosConfig";
 
 const Profile = () => {
 	const [user, setUser] = useState<userType>();
@@ -14,16 +15,12 @@ const Profile = () => {
 
 	const get_user_data = async (id: string) => {
 		try {
-			const userResponse = await fetch(
-				`http://localhost:8000/api/users/${id}`
+			const userResponse = await axiosInstance(`/api/users/${id}`);
+			const postsResponse = await axiosInstance(
+				`/api/blog/user-posts/${id}`
 			);
-			const postsResponse = await fetch(
-				`http://localhost:8000/api/blog/user-posts/${id}`
-			);
-			const user = await userResponse.json();
-			const userPosts = await postsResponse.json();
-			setUser(user);
-			setUserPosts(userPosts);
+			setUser(userResponse.data);
+			setUserPosts(postsResponse.data);
 		} catch (error) {
 			console.error(error);
 		}

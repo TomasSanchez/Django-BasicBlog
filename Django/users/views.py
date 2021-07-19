@@ -2,7 +2,7 @@
 import json
 
 from .models import User
-from .serializers import UserSerializer, RegisterUserSerializer
+from .serializers import UserSerializer
 
 from django.http import JsonResponse
 from django.db.models.query import QuerySet
@@ -20,8 +20,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 class CreateUser(APIView):
     
     def post(self, request):
-        # CHECK if this works 
-        # reg_serializer = RegisterUserSerializer(data=request.data)
         reg_serializer = UserSerializer(data=request.data)
         if reg_serializer.is_valid():
             new_user = reg_serializer.save()

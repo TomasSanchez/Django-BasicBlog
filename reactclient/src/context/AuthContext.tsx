@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createContext } from "react";
 import Cookies from "js-cookie";
+import axiosInstance from "./AxiosConfig";
 
 type userType = {
 	id: number;
@@ -41,22 +42,31 @@ const AuthContext = ({ children }: any) => {
 	};
 
 	const get_current_user_or_log_out = async () => {
-		const response = await fetch("/api/users/me", {
+		const response = await axiosInstance("/api/users/me", {
 			headers: {
 				"Content-Type": "application/json",
-				// "X-CSRFToken": csrfToken,
+				"X-CSRFToken": csrfToken,
 			},
-			credentials: "include",
+			withCredentials: true,
 		});
-		const jsRes = await response.json();
-		if (jsRes[0] !== "AnonymousUser") {
-			setIsLogedIn(true);
-			setCsrfToken(Cookies.get("csrftoken"));
-			setUser(jsRes);
+		// try {
+		// 	const jsres = await response.json();
+		// 	console.log("response.json ", jsres);
+		// } catch (error) {
+		// 	console.error(error);
+		// }
+
+		if (response.status === 200) {
+			if (response.data[0] !== "AnonymousUser") {
+				setIsLogedIn(true);
+				setCsrfToken(Cookies.get("csrftoken"));
+				setUser(response.data);
+			}
 		}
 	};
 	useEffect(() => {
 		get_current_user_or_log_out();
+		// eslint-disable-next-line
 	}, []);
 	return (
 		<ContextAuth.Provider value={AuthContextValues}>

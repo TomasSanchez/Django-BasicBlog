@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { postType } from "./types/postTypes";
 import { ContextPost } from "./context/PostsContext";
 import { useParams } from "react-router-dom";
+import axiosInstance from "./context/AxiosConfig";
 
 const PostDetail = () => {
 	const [post, setPost] = useState<postType>();
@@ -12,11 +13,8 @@ const PostDetail = () => {
 
 	const get_post = async (id: string) => {
 		try {
-			const postResponse = await fetch(
-				`http://localhost:8000/api/blog/${id}`
-			);
-			const post = await postResponse.json();
-			setPost(post);
+			const post = await axiosInstance.get(`/api/blog/${id}`);
+			setPost(post.data);
 		} catch (error) {
 			console.error(error);
 		}

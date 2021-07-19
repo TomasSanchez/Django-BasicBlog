@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { SyntheticEvent } from "react";
 import { ContextAuth } from "./context/AuthContext";
 import Footer from "./components/Footer";
+import axiosInstance from "./context/AxiosConfig";
 
 const Signup = () => {
 	document.title = "SignUp";
@@ -21,18 +22,18 @@ const Signup = () => {
 
 	const handleSubmit = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		const response = await fetch("http://localhost:8000/api/users/create", {
+		const response = await axiosInstance("/api/users/create", {
 			headers: {
 				"Content-Type": "application/json",
 				"X-CSRFToken": csrfToken!,
 			},
 			method: "POST",
-			credentials: "include",
-			body: JSON.stringify(user),
+			withCredentials: true,
+			data: JSON.stringify(user),
 		});
-		const jsres = await response.json();
+		const jsres = response.data;
 
-		if (response.ok) {
+		if (response.status === 201) {
 			// ADD modal 'acc created succesfully' then redirect
 			history.push("/login");
 		} else {
@@ -54,8 +55,8 @@ const Signup = () => {
 					last_name: "",
 					password: "",
 				});
-				setGeneralError("something went wrong, please try again");
-				console.log("error ran");
+				setGeneralError("Something went wrong, please try again");
+				console.log("error");
 			}
 		}
 	};

@@ -3,6 +3,7 @@ import { createContext } from "react";
 import { commentType, likes_usernamesTypes } from "../types/commentTypes";
 import { postType } from "../types/postTypes";
 import { ContextAuth } from "./AuthContext";
+import axiosInstance from "./AxiosConfig";
 
 type contextProps = {
 	blog: postType[] | undefined;
@@ -40,21 +41,19 @@ const PostsContext = ({ children }: any) => {
 
 	const get_posts = async () => {
 		try {
-			const response = await fetch("http://localhost:8000/api/blog/");
-			// const response = await fetch("/api/");
-			const blogs = await response.json();
-			setBlog(blogs);
+			const response = await axiosInstance.get("/api/blog/");
+
+			setBlog(response.data);
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
 	const get_comments = async (post_id: string) => {
-		const commentResponse = await fetch(
-			`http://localhost:8000/api/blog/${post_id}/comment`
+		const comments = await axiosInstance.get(
+			`/api/blog/${post_id}/comment`
 		);
-		const comments = await commentResponse.json();
-		setComments(comments);
+		setComments(comments.data);
 	};
 
 	const hasLiked: (likes_usernames: likes_usernamesTypes[]) => boolean = (
@@ -68,18 +67,18 @@ const PostsContext = ({ children }: any) => {
 
 	const handleLike = async (post_id: number) => {
 		if (isLogedIn) {
-			const response = await fetch(
-				`http://localhost:8000/api/blog/${post_id}/post_like`,
+			const response = await axiosInstance(
+				`/api/blog/${post_id}/post_like`,
 				{
 					headers: {
 						"Content-Type": "application/json",
 						"X-CSRFToken": csrfToken!,
 					},
 					method: "PUT",
-					credentials: "include",
+					withCredentials: true,
 				}
 			);
-			if (response.ok) {
+			if (response.status === 200) {
 				get_posts();
 			}
 		} else {

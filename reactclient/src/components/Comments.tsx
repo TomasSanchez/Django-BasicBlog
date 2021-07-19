@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { ContextAuth } from "../context/AuthContext";
+import axiosInstance from "../context/AxiosConfig";
 import { commentType } from "../types/commentTypes";
 import { likes_usernamesTypes } from "../types/commentTypes";
 import AddComment from "./AddComment";
@@ -30,18 +31,18 @@ const Comments = ({ comments, post_id, get_comments }: propType) => {
 
 	const handleLike = async (comment_id: number) => {
 		if (isLogedIn) {
-			const response = await fetch(
-				`http://localhost:8000/api/blog/${comment_id}/comment_like`,
+			const response = await axiosInstance(
+				`/api/blog/${comment_id}/comment_like`,
 				{
 					headers: {
 						"Content-Type": "application/json",
 						"X-CSRFToken": csrfToken!,
 					},
 					method: "PUT",
-					credentials: "include",
+					withCredentials: true,
 				}
 			);
-			if (response.ok) {
+			if (response.status === 200) {
 				console.log("message liked");
 				get_comments(post_id);
 			}

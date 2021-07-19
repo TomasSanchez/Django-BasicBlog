@@ -3,6 +3,7 @@ import { Fragment, useRef, useContext, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ContextAuth } from "../context/AuthContext";
 import { ContextPost } from "../context/PostsContext";
+import axiosInstance from "../context/AxiosConfig";
 
 type propType = {
 	open: boolean;
@@ -19,22 +20,20 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 		if (!isLogedIn) {
 			alert("not loged");
 		} else {
-			const response = await fetch(
-				"http://localhost:8000/api/blog/create",
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"X-CSRFToken": csrfToken!,
-					},
-					method: "POST",
-					credentials: "include",
-					body: JSON.stringify(post),
-				}
-			);
+			const response = await axiosInstance("/api/blog/create", {
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrfToken!,
+				},
+				method: "POST",
+				withCredentials: true,
+				data: JSON.stringify(post),
+			});
 
-			if (response.ok) {
-				get_posts();
+			if (response.status === 201) {
+				setOpen(false);
 				alert("success");
+				get_posts();
 			}
 		}
 	};

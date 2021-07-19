@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ContextAuth } from "../context/AuthContext";
+import axiosInstance from "../context/AxiosConfig";
 import AddPostModal from "./AddPostModal";
 
 const Navbar = () => {
@@ -10,18 +11,15 @@ const Navbar = () => {
 
 	const handleLogout = async () => {
 		try {
-			const response = await fetch(
-				"http://localhost:8000/api/users/logout",
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"X-CSRFToken": csrfToken!,
-					},
-					method: "POST",
-					credentials: "include",
-				}
-			);
-			if (response.ok) {
+			const response = await axiosInstance("/api/users/logout", {
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrfToken!,
+				},
+				method: "POST",
+				withCredentials: true,
+			});
+			if (response.status === 200) {
 				setIsLogedIn(false);
 				history.push("/");
 			}
