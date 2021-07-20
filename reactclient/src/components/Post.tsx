@@ -4,16 +4,25 @@ import { postType } from "../types/postTypes";
 
 type propType = {
 	post: postType;
+	get_post: (id: string) => void;
+	id: string;
 };
 
-const Post = ({ post }: propType) => {
-	const { handleLike } = useContext(ContextPost);
+const Post = ({ post, get_post, id }: propType) => {
+	const { handleLike, hasLiked, liked, not_liked } = useContext(ContextPost);
+
+	const handleLikeClick = async () => {
+		await handleLike(post.id);
+		get_post(id);
+	};
 
 	return (
 		<div className='py-8 flex flex-wrap md:flex-nowrap'>
 			<div className='md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col'>
 				<span className='font-semibold title-font text-white'>
-					By: {post.author.user_name}
+					<a href={`/profile/${post.author.user_id}`}>
+						By: {post.author.user_name}
+					</a>
 				</span>
 				<span className='mt-1 text-gray-500 text-sm'>
 					{post.published.split("T")[0]}{" "}
@@ -28,8 +37,11 @@ const Post = ({ post }: propType) => {
 					{post.content}
 				</p>
 				<div className='py-4 flex'>
-					<span className='text-gray-500 mr-3 inline-flex items-center leading-none text-sm pr-3 border-r-2 border-gray-700 border-opacity-50'>
-						<button onClick={() => handleLike(post.id)}>
+					<span
+						className={
+							hasLiked(post.likes_usernames) ? liked : not_liked
+						}>
+						<button onClick={handleLikeClick}>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								className='h-6 w-6'

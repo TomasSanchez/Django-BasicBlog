@@ -74,7 +74,15 @@ const Profile = () => {
 					</div>
 				</div>
 			</section>
-			<div>{userPosts && <Blogs blogs={userPosts} />}</div>
+			<div>
+				{userPosts && (
+					<Blogs
+						blogs={userPosts}
+						get_user_data={get_user_data}
+						profile_id={id}
+					/>
+				)}
+			</div>
 		</div>
 	);
 };

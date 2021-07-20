@@ -31,7 +31,9 @@ const PostDetail = () => {
 			<section className='text-gray-400 bg-gray-800 body-font'>
 				<div className='container px-5 py-24 mx-auto'>
 					<div className='-my-8 divide-y-2 divide-gray-800'>
-						{post && <Post post={post!} />}
+						{post && (
+							<Post post={post!} get_post={get_post} id={id} />
+						)}
 					</div>
 				</div>
 			</section>

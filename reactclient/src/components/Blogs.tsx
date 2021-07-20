@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { postType } from "../types/postTypes";
 
 import { ContextPost } from "../context/PostsContext";
@@ -7,15 +8,35 @@ import PostOptionDropdown from "./PostOptionsDropdown";
 
 type propType = {
 	blogs: postType[];
+	get_user_data: ((id: string) => void) | undefined;
+	profile_id: string;
 };
 
-const Blogs = ({ blogs }: propType) => {
+const Blogs = ({ blogs, get_user_data, profile_id }: propType) => {
 	const { handleLike, hasLiked, isOwner, liked, not_liked } =
 		useContext(ContextPost);
+	const location = useLocation();
+
+	const handleLikeCLick = async (id: number) => {
+		handleLike(id);
+		if (location.pathname.includes("profile")) {
+			if (get_user_data && profile_id) {
+				get_user_data(profile_id);
+			}
+		}
+	};
+
+	const sort = () => {
+		blogs.sort((a, b) => (a.likes > b.likes ? 1 : -1));
+	};
 
 	return (
 		<section className='text-gray-400 bg-gray-900 body-font overflow-hidden'>
-			<div className='container px-5 py-24 mx-auto'>
+			<div className='container px-5 py-20 mx-auto'>
+				<div className='text-right mr-3 mb-3'>
+					{" "}
+					<button onClick={sort}>Sort</button>{" "}
+				</div>
 				<div className='-my-8 divide-y-2 divide-gray-800'>
 					{blogs?.map((post: postType) => (
 						<div
@@ -48,12 +69,16 @@ const Blogs = ({ blogs }: propType) => {
 										)}
 									</div>
 								</div>
-
-								<p className='leading-relaxed overflow-ellipsis '>
-									{post.content}
-								</p>
+								<div className='overflow-hidden  overflow-ellipsis max-h-40'>
+									<p className='leading-relaxed overflow-ellipsis '>
+										{post.content}
+									</p>
+								</div>
 								<div className='pt-3 flex'>
-									<button onClick={() => handleLike(post.id)}>
+									<button
+										onClick={() =>
+											handleLikeCLick(post.id)
+										}>
 										<span
 											className={
 												hasLiked(post.likes_usernames)

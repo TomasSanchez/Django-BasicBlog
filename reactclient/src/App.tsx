@@ -26,7 +26,11 @@ function App() {
 					</button>
 				</div>
 			) : (
-				<Blogs blogs={blog!} />
+				<Blogs
+					blogs={blog!}
+					get_user_data={undefined}
+					profile_id={""}
+				/>
 			)}
 		</div>
 	);
