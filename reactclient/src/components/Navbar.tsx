@@ -43,6 +43,9 @@ const Navbar = () => {
 								Create Post
 								<AddPostModal open={open} setOpen={setOpen} />
 							</button>
+							<a href='/about' className='mr-5 hover:text-white'>
+								About
+							</a>
 						</nav>
 						{!isLogedIn ? (
 							<div>

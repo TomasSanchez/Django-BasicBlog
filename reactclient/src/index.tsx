@@ -9,6 +9,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import PostDetail from "./PostDetail";
 import Profile from "./Profile";
+import About from "./About";
 import "./styles/index.css";
 
 ReactDOM.render(
@@ -20,6 +21,7 @@ ReactDOM.render(
 					<Route exact path='/' component={App} />
 					<Route path='/login' component={Login} />
 					<Route path='/signup' component={Signup} />
+					<Route path='/about' component={About} />
 					<Route exact path='/profile/:id' component={Profile} />
 					<Route exact path='/:id' component={PostDetail} />
 				</Switch>
