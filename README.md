@@ -22,4 +22,4 @@ Built with django drf and Next js styled with tailwindCss
     ![signup](/ReadmeFiles/Blog%20Single%20Post.png)
 
 -   About View:
-    ![about](/ReadmeFiles/About%page.png)
+    ![about](/ReadmeFiles/About%20page.png)
