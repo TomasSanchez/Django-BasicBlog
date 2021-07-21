@@ -3,11 +3,13 @@ import { useHistory } from "react-router-dom";
 import { ContextAuth } from "../context/AuthContext";
 import axiosInstance from "../context/AxiosConfig";
 import AddPostModal from "./AddPostModal";
+import Dropdown from "./UserDropdownMenu";
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
 	const history = useHistory();
-	const { isLogedIn, setIsLogedIn, csrfToken } = useContext(ContextAuth);
+	const { isLogedIn, setIsLogedIn, csrfToken, user } =
+		useContext(ContextAuth);
 
 	const handleLogout = async () => {
 		try {
@@ -81,21 +83,12 @@ const Navbar = () => {
 								</a>
 							</div>
 						) : (
-							<button
-								onClick={handleLogout}
-								className='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0'>
-								Logout
-								<svg
-									fill='none'
-									stroke='currentColor'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									strokeWidth={2}
-									className='w-4 h-4 ml-1'
-									viewBox='0 0 24 24'>
-									<path d='M5 12h14M12 5l7 7-7 7' />
-								</svg>
-							</button>
+							<div className='inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0'>
+								<Dropdown
+									user={user!}
+									handleLogout={handleLogout}
+								/>
+							</div>
 						)}
 					</div>
 				</header>

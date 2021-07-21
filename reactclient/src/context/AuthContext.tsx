@@ -49,12 +49,6 @@ const AuthContext = ({ children }: any) => {
 			},
 			withCredentials: true,
 		});
-		// try {
-		// 	const jsres = await response.json();
-		// 	console.log("response.json ", jsres);
-		// } catch (error) {
-		// 	console.error(error);
-		// }
 
 		if (response.status === 200) {
 			if (response.data[0] !== "AnonymousUser") {
@@ -64,6 +58,7 @@ const AuthContext = ({ children }: any) => {
 			}
 		}
 	};
+
 	useEffect(() => {
 		get_current_user_or_log_out();
 		// eslint-disable-next-line

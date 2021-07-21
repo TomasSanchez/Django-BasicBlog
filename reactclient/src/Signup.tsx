@@ -62,13 +62,18 @@ const Signup = () => {
 	};
 
 	return isLogedIn ? (
-		<div className='text-gray-400 bg-gray-900 container px-5 py-24 mx-auto flex flex-wrap items-center'>
-			{" "}
-			You are already logged in! Go to{" "}
-			<a href='/' className='text-red-300 underline ml-1'>
+		<div>
+			<div className='text-gray-300 bg-gray-900 container px-5 pt-24 mx-auto flex flex-wrap items-center'>
 				{" "}
-				Home
-			</a>
+				You are already logged in! Go to{" "}
+				<a href='/' className='text-red-300 underline ml-1'>
+					{" "}
+					Home
+				</a>
+			</div>
+			<div className='text-gray-300 bg-gray-900 container px-5 mx-auto flex flex-wrap items-center'>
+				If you want to create an account please Log out
+			</div>
 		</div>
 	) : (
 		<div>

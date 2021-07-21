@@ -10,3 +10,11 @@ export type userType = {
 	about: string;
 	liked_posts: userPostType[];
 };
+
+export type whoAmIuserType = {
+	id: number;
+	email: string;
+	first_name: string;
+	last_name: string;
+	user_name: string;
+};
