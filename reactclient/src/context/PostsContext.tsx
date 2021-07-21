@@ -7,7 +7,7 @@ import axiosInstance from "./AxiosConfig";
 
 type contextProps = {
 	blog: postType[] | undefined;
-	get_posts: VoidFunction;
+	get_posts: () => void;
 	comments: commentType[] | undefined;
 	get_comments: (post_id: string) => void;
 	hasLiked: (likes_usernames: likes_usernamesTypes[]) => boolean;

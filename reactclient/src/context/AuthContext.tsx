@@ -3,12 +3,20 @@ import { createContext } from "react";
 import Cookies from "js-cookie";
 import axiosInstance from "./AxiosConfig";
 
+type followingType = {
+	created: string;
+	following_user_id_id: number;
+	id: number;
+	user_id_id: number;
+};
+
 type userType = {
 	id: number;
 	email: string;
 	user_name: string;
 	first_name: string;
 	last_name: string;
+	following: followingType[];
 };
 
 type AuthProps = {

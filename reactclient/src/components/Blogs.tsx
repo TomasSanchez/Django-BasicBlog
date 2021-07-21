@@ -16,7 +16,7 @@ const Blogs = ({ blogs, get_user_data, profile_id }: propType) => {
 
 	const handleLikeCLick = async (id: number) => {
 		handleLike(id);
-		if (location.pathname.includes("profile")) {
+		if (location.pathname.includes("profile") && profile_id) {
 			if (get_user_data && profile_id) {
 				get_user_data(profile_id);
 			}

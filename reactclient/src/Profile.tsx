@@ -20,6 +20,7 @@ const Profile = () => {
 			console.error(error);
 		}
 	};
+
 	const get_user_posts = async (id: string) => {
 		try {
 			const postsResponse = await axiosInstance(`/api/blog/user-posts/${id}`);
@@ -29,6 +30,7 @@ const Profile = () => {
 			console.error(error);
 		}
 	};
+
 	const get_user_data = async (id: string) => {
 		get_user(id);
 		get_user_posts(id);
@@ -66,6 +68,7 @@ const Profile = () => {
 	}
 	useEffect(() => {
 		get_user_data(id);
+		// eslint-disable-next-line
 	}, [id]);
 
 	return !user ? (

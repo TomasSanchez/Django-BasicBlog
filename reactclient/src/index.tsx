@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import AuthContext from "./context/AuthContext";
@@ -10,6 +9,7 @@ import Signup from "./Signup";
 import PostDetail from "./PostDetail";
 import Profile from "./Profile";
 import About from "./About";
+import PersonalFeed from "./PersonalFeed";
 import "./styles/index.css";
 
 ReactDOM.render(
@@ -22,8 +22,9 @@ ReactDOM.render(
 					<Route path='/login' component={Login} />
 					<Route path='/signup' component={Signup} />
 					<Route path='/about' component={About} />
-					<Route exact path='/profile/:id' component={Profile} />
-					<Route exact path='/:id' component={PostDetail} />
+					<Route path='/feed' component={PersonalFeed} />
+					<Route path='/profile/:id' component={Profile} />
+					<Route path='/:id' component={PostDetail} />
 				</Switch>
 			</Router>
 		</PostsContext>

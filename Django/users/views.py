@@ -16,11 +16,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
-class testClass(generics.ListAPIView):
-    serializer_class= UserSerializer
-    queryset = User.objects.all()
-
-
 class FollowingView(generics.UpdateAPIView):
     
     permission_classes = [AllowAny]
@@ -127,12 +122,15 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 # for checking if user is loged in
-class Me(APIView):
+class WhoAmI(APIView):
 
     @staticmethod
     def get(request, format=None):
         if request.user.is_authenticated:
             user = request.user
+            print('-------------------')
+            print('user: ', user.following.all().values())
+            print('-------------------')
             return Response({ 'id':user.id, 'email':user.email, 'user_name':user.user_name,
-                            'first_name':user.first_name, 'last_name':user.last_name})
+                            'first_name':user.first_name, 'last_name':user.last_name, 'following': user.following.all().values()})
         return Response({'AnonymousUser'})

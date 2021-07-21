@@ -40,6 +40,9 @@ const Navbar = () => {
 								Create Post
 								<AddPostModal open={open} setOpen={setOpen} />
 							</button>
+							<a href='/feed' className='mr-5 hover:text-white'>
+								My Feed
+							</a>
 							<a href='/about' className='mr-5 hover:text-white'>
 								About
 							</a>
