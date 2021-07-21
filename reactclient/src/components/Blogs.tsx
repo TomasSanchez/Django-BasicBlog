@@ -1,9 +1,7 @@
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { postType } from "../types/postTypes";
-
 import { ContextPost } from "../context/PostsContext";
-
 import PostOptionDropdown from "./PostOptionsDropdown";
 
 type propType = {
@@ -13,8 +11,7 @@ type propType = {
 };
 
 const Blogs = ({ blogs, get_user_data, profile_id }: propType) => {
-	const { handleLike, hasLiked, isOwner, liked, not_liked } =
-		useContext(ContextPost);
+	const { handleLike, hasLiked, isOwner, liked, not_liked } = useContext(ContextPost);
 	const location = useLocation();
 
 	const handleLikeCLick = async (id: number) => {
@@ -39,52 +36,30 @@ const Blogs = ({ blogs, get_user_data, profile_id }: propType) => {
 				</div>
 				<div className='-my-8 divide-y-2 divide-gray-800'>
 					{blogs?.map((post: postType) => (
-						<div
-							className='py-8 flex flex-wrap md:flex-nowrap'
-							key={post.id}>
+						<div className='py-8 flex flex-wrap md:flex-nowrap' key={post.id}>
 							<div className='md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col'>
 								<span className='font-semibold title-font text-white'>
 									Author:
-									<a href={`/profile/${post.author.user_id}`}>
-										{" "}
-										{post.author.user_name}
-									</a>
+									<a href={`/profile/${post.author.user_id}`}> {post.author.user_name}</a>
 								</span>
 								<span className='mt-1 text-gray-500 text-sm'>
-									{post.published.split("T")[0]}{" "}
-									{post.published.split("T")[1].split(".")[0]}
+									{post.published.split("T")[0]} {post.published.split("T")[1].split(".")[0]}
 								</span>
 							</div>
 							<div className='md:flex-grow'>
 								<div className='flex flex-row'>
-									<h2 className='text-2xl font-medium text-white title-font mb-2'>
-										{post.title}
-									</h2>
+									<h2 className='text-2xl font-medium text-white title-font mb-2'>{post.title}</h2>
 
 									<div className='text-gray-500 ml-2 flex-1 text-right text-sm leading-7'>
-										{isOwner(post.author.user_id) ? (
-											<PostOptionDropdown />
-										) : (
-											<div></div>
-										)}
+										{isOwner(post.author.user_id) ? <PostOptionDropdown /> : <div></div>}
 									</div>
 								</div>
 								<div className='overflow-hidden  overflow-ellipsis max-h-40'>
-									<p className='leading-relaxed overflow-ellipsis '>
-										{post.content}
-									</p>
+									<p className='leading-relaxed overflow-ellipsis '>{post.content}</p>
 								</div>
 								<div className='pt-3 flex'>
-									<button
-										onClick={() =>
-											handleLikeCLick(post.id)
-										}>
-										<span
-											className={
-												hasLiked(post.likes_usernames)
-													? liked
-													: not_liked
-											}>
+									<button onClick={() => handleLikeCLick(post.id)}>
+										<span className={hasLiked(post.likes_usernames) ? liked : not_liked}>
 											<svg
 												xmlns='http://www.w3.org/2000/svg'
 												className='h-6 w-6'
@@ -115,9 +90,7 @@ const Blogs = ({ blogs, get_user_data, profile_id }: propType) => {
 										{post.nbr_of_comments}
 									</span>
 
-									<a
-										className='text-indigo-400 inline-flex items-center py-1'
-										href={`/${post.id}`}>
+									<a className='text-indigo-400 inline-flex items-center py-1' href={`/${post.id}`}>
 										View Post
 										<svg
 											className='w-4 h-4 ml-2'

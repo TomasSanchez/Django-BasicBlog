@@ -13,7 +13,7 @@ type propType = {
 };
 
 const Comments = ({ comments, post_id, get_comments }: propType) => {
-	const { isLogedIn, csrfToken, user } = useContext(ContextAuth);
+	const { isLogedIn, csrfToken, current_logged_user } = useContext(ContextAuth);
 
 	const liked =
 		"text-red-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50";
@@ -24,24 +24,20 @@ const Comments = ({ comments, post_id, get_comments }: propType) => {
 		likes_usernames: likes_usernamesTypes[]
 	) => {
 		return likes_usernames.some(
-			(liked_user: likes_usernamesTypes) =>
-				liked_user.user_id === user?.id
+			(liked_user: likes_usernamesTypes) => liked_user.user_id === current_logged_user?.id
 		);
 	};
 
 	const handleLike = async (comment_id: number) => {
 		if (isLogedIn) {
-			const response = await axiosInstance(
-				`/api/blog/${comment_id}/comment_like`,
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"X-CSRFToken": csrfToken!,
-					},
-					method: "PUT",
-					withCredentials: true,
-				}
-			);
+			const response = await axiosInstance(`/api/blog/${comment_id}/comment_like`, {
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrfToken!,
+				},
+				method: "PUT",
+				withCredentials: true,
+			});
 			if (response.status === 200) {
 				console.log("message liked");
 				get_comments(post_id);
@@ -52,7 +48,7 @@ const Comments = ({ comments, post_id, get_comments }: propType) => {
 	};
 
 	const isOwner: (author_id: number) => boolean = (author_id: number) => {
-		return user?.id === author_id;
+		return current_logged_user?.id === author_id;
 	};
 
 	return (
@@ -67,44 +63,23 @@ const Comments = ({ comments, post_id, get_comments }: propType) => {
 					)}
 					{comments && comments.length > 0 ? (
 						comments.map((comment: commentType) => (
-							<div
-								className='flex flex-wrap -m-4'
-								key={comment.id}>
+							<div className='flex flex-wrap -m-4' key={comment.id}>
 								<div className=' p-4'>
 									<div className='border border-gray-700 border-opacity-75 p-6 rounded-lg'>
 										<div className='flex flex-row'>
 											<h2 className='text-md text-white font-medium title-font mb-2'>
-												<a
-													href={`/profile/${comment.author.user_id}`}>
+												<a href={`/profile/${comment.author.user_id}`}>
 													{comment.author.user_name}
 												</a>
 											</h2>
 											<div className='text-gray-500 ml-2 flex-1 text-right text-sm leading-7'>
-												{isOwner(
-													comment.author.user_id
-												) ? (
-													<PostOptionDropdown />
-												) : (
-													<div></div>
-												)}
+												{isOwner(comment.author.user_id) ? <PostOptionDropdown /> : <div></div>}
 											</div>
 										</div>
-										<p className='leading-relaxed text-base'>
-											{comment.content}
-										</p>
+										<p className='leading-relaxed text-base'>{comment.content}</p>
 										<div className='pt-3 flex'>
-											<button
-												onClick={() =>
-													handleLike(comment.id)
-												}>
-												<span
-													className={
-														hasLiked(
-															comment.likes_usernames
-														)
-															? liked
-															: not_liked
-													}>
+											<button onClick={() => handleLike(comment.id)}>
+												<span className={hasLiked(comment.likes_usernames) ? liked : not_liked}>
 													<svg
 														xmlns='http://www.w3.org/2000/svg'
 														className='h-6 w-6'

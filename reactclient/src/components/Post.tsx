@@ -20,27 +20,17 @@ const Post = ({ post, get_post, id }: propType) => {
 		<div className='py-8 flex flex-wrap md:flex-nowrap'>
 			<div className='md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col'>
 				<span className='font-semibold title-font text-white'>
-					<a href={`/profile/${post.author.user_id}`}>
-						By: {post.author.user_name}
-					</a>
+					<a href={`/profile/${post.author.user_id}`}>By: {post.author.user_name}</a>
 				</span>
 				<span className='mt-1 text-gray-500 text-sm'>
-					{post.published.split("T")[0]}{" "}
-					{post.published.split("T")[1].split(".")[0]}
+					{post.published.split("T")[0]} {post.published.split("T")[1].split(".")[0]}
 				</span>
 			</div>
 			<div className='md:flex-grow'>
-				<h2 className='text-2xl font-medium text-white title-font mb-2'>
-					{post.title}
-				</h2>
-				<p className='leading-relaxed overflow-ellipsis '>
-					{post.content}
-				</p>
+				<h2 className='text-2xl font-medium text-white title-font mb-2'>{post.title}</h2>
+				<p className='leading-relaxed overflow-ellipsis '>{post.content}</p>
 				<div className='py-4 flex'>
-					<span
-						className={
-							hasLiked(post.likes_usernames) ? liked : not_liked
-						}>
+					<span className={hasLiked(post.likes_usernames) ? liked : not_liked}>
 						<button onClick={handleLikeClick}>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
@@ -48,12 +38,7 @@ const Post = ({ post, get_post, id }: propType) => {
 								fill='none'
 								viewBox='0 0 24 24'
 								stroke='currentColor'>
-								<path
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									strokeWidth={2}
-									d='M5 15l7-7 7 7'
-								/>
+								<path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 15l7-7 7 7' />
 							</svg>
 						</button>
 						{post.likes}

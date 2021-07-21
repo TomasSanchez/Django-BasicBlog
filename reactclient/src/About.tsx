@@ -19,12 +19,12 @@ const About = () => {
 									Django + React Blog app. <br /> This webapp
 									is a blog inspired by twitter following many
 									interactions in which we are all familiar;
-									liking posts, commenting on posts, creating
-									users with authentication (login, logout)
-									and creating posts for anyone to see
-									including basic CRUD functionality to
-									delete, update, create and retrieve posts
-									from a database. <br />
+									liking posts, commenting on posts,
+									following, followers, creating users with
+									authentication (login, logout) and creating
+									posts for anyone to see including basic CRUD
+									functionality to delete, update, create and
+									retrieve posts from a database. <br />
 									This is one of my first web apps built with
 									django react typescript and all the
 									technologies listed below. Before i only got

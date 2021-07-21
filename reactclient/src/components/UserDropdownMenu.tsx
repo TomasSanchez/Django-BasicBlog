@@ -21,10 +21,7 @@ const Dropdown = ({ user, handleLogout }: propType) => {
                             px-4 py-2  text-sm font-medium  
                             hover:bg-gray-70 text-gray-300 body-font '>
 							{user && "@" + user.user_name}
-							<ChevronDownIcon
-								className='-mr-1 ml-2 h-5 w-5'
-								aria-hidden='true'
-							/>
+							<ChevronDownIcon className='-mr-1 ml-2 h-5 w-5' aria-hidden='true' />
 						</Menu.Button>
 					</div>
 

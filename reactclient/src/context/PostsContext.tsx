@@ -32,7 +32,7 @@ export const ContextPost = createContext<contextProps>({
 const PostsContext = ({ children }: any) => {
 	const [blog, setBlog] = useState<postType[]>();
 	const [comments, setComments] = useState<commentType[]>();
-	const { isLogedIn, csrfToken, user } = useContext(ContextAuth);
+	const { isLogedIn, csrfToken, current_logged_user } = useContext(ContextAuth);
 
 	const liked =
 		"text-red-500 mr-3 inline-flex items-center leading-none text-sm pr-3 py-1 border-r-2 border-gray-700 border-opacity-50";
@@ -50,9 +50,7 @@ const PostsContext = ({ children }: any) => {
 	};
 
 	const get_comments = async (post_id: string) => {
-		const comments = await axiosInstance.get(
-			`/api/blog/${post_id}/comment`
-		);
+		const comments = await axiosInstance.get(`/api/blog/${post_id}/comment`);
 		setComments(comments.data);
 	};
 
@@ -60,24 +58,20 @@ const PostsContext = ({ children }: any) => {
 		likes_usernames: likes_usernamesTypes[]
 	) => {
 		return likes_usernames.some(
-			(liked_user: likes_usernamesTypes) =>
-				liked_user.user_id === user?.id
+			(liked_user: likes_usernamesTypes) => liked_user.user_id === current_logged_user?.id
 		);
 	};
 
 	const handleLike = async (post_id: number) => {
 		if (isLogedIn) {
-			const response = await axiosInstance(
-				`/api/blog/${post_id}/post_like`,
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"X-CSRFToken": csrfToken!,
-					},
-					method: "PUT",
-					withCredentials: true,
-				}
-			);
+			const response = await axiosInstance(`/api/blog/${post_id}/post_like`, {
+				headers: {
+					"Content-Type": "application/json",
+					"X-CSRFToken": csrfToken!,
+				},
+				method: "PUT",
+				withCredentials: true,
+			});
 			if (response.status === 200) {
 				get_posts();
 			}
@@ -87,7 +81,7 @@ const PostsContext = ({ children }: any) => {
 	};
 
 	const isOwner: (author_id: number) => boolean = (author_id: number) => {
-		return user?.id === author_id;
+		return current_logged_user?.id === author_id;
 	};
 
 	const PostContextValues = {
@@ -106,11 +100,7 @@ const PostsContext = ({ children }: any) => {
 		get_posts();
 	}, []);
 
-	return (
-		<ContextPost.Provider value={PostContextValues}>
-			{children}
-		</ContextPost.Provider>
-	);
+	return <ContextPost.Provider value={PostContextValues}>{children}</ContextPost.Provider>;
 };
 
 export default PostsContext;

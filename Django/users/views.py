@@ -1,8 +1,8 @@
 
 import json
 
-from .models import User
-from .serializers import UserSerializer
+from .models import User, UserFollowing
+from .serializers import FollowingSerializer, UserSerializer
 
 from django.http import JsonResponse
 from django.db.models.query import QuerySet
@@ -16,6 +16,38 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
+class testClass(generics.ListAPIView):
+    serializer_class= UserSerializer
+    queryset = User.objects.all()
+
+
+class FollowingView(generics.UpdateAPIView):
+    
+    permission_classes = [AllowAny]
+    queryset = UserFollowing.objects.all()
+    serializer_class = FollowingSerializer
+
+
+    def update(self, request, *args, **kwargs):
+        pk = kwargs['pk']
+        user_to_follow = User.objects.get(id=pk)
+        loged_user = self.request.user
+        # If loged user wants to follow a user (to_follow) check if the relation exists
+        if user_to_follow.followers.all().filter(user_id=loged_user.id).exists():
+            print('---------------------------------------------------')
+            print('relation exists, deleting')
+            print('---------------------------------------------------')
+            # if already there, then unfollow, like a toggle
+            user_to_follow.followers.all().get(user_id=loged_user.id).delete()
+            response = JsonResponse({"Info": "Success - Deleted"})
+        else:
+            print('---------------------------------------------------')
+            print('relation does not exists, creating')
+            print('---------------------------------------------------')
+            # if it does not exists, create the relation
+            UserFollowing.objects.create(user_id=loged_user,following_user_id=user_to_follow)
+            response = JsonResponse({"Info": "Success - Following"})
+        return response
 
 class CreateUser(APIView):
     

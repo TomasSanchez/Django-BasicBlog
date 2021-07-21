@@ -1,4 +1,6 @@
 from operator import add
+
+from django.http.response import JsonResponse
 from users.models import User
 from django.db.models import query
 from rest_framework import generics, status
@@ -90,16 +92,13 @@ class PostLike(generics.UpdateAPIView):
             print('user already liked!')
             instance.likes.remove(user.id)
             print('you have been removed from likes')
+            response = JsonResponse({"Info": "Success - Removed like"})
         else:
             print('user hasnt liked')    
             instance.likes.add(user.id)
             print('you have been added to likes')
-        serializer = self.get_serializer(instance, partial=partial)
-        # serializer.is_valid(raise_exception=True)
-        # self.perform_update(serializer)
-        if getattr(instance, '_prefetched_objects_cache', None):            
-            instance._prefetched_objects_cache = {}
-        return Response(serializer.data)
+            response = JsonResponse({"Info": "Success - Added Like"})
+        return response
 
 
 

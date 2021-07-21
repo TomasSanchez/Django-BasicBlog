@@ -1,28 +1,63 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Blogs from "./components/Blogs";
-// import { ContextPost } from "./context/PostsContext";
 import { postType } from "./types/postTypes";
-import { userType } from "./types/userTypes";
+import { followingType, userType } from "./types/userTypes";
 import { useParams } from "react-router-dom";
 import axiosInstance from "./context/AxiosConfig";
+import { ContextAuth } from "./context/AuthContext";
 
 const Profile = () => {
 	const [user, setUser] = useState<userType>();
 	const [userPosts, setUserPosts] = useState<postType[]>();
-	// const { handleLike, hasLiked, isOwner, liked, not_liked } =
-	// 	useContext(ContextPost);
+	const { isLogedIn, csrfToken, current_logged_user } = useContext(ContextAuth);
 	const { id } = useParams<{ id: string }>();
 
-	const get_user_data = async (id: string) => {
+	const get_user = async (id: string) => {
 		try {
 			const userResponse = await axiosInstance(`/api/users/${id}`);
-			const postsResponse = await axiosInstance(
-				`/api/blog/user-posts/${id}`
-			);
 			setUser(userResponse.data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+	const get_user_posts = async (id: string) => {
+		try {
+			const postsResponse = await axiosInstance(`/api/blog/user-posts/${id}`);
+
 			setUserPosts(postsResponse.data);
 		} catch (error) {
 			console.error(error);
+		}
+	};
+	const get_user_data = async (id: string) => {
+		get_user(id);
+		get_user_posts(id);
+	};
+
+	const isFollowing = () => {
+		return user?.followers.some(
+			(follow_realation: followingType) => follow_realation.user_id === current_logged_user?.id
+		);
+	};
+
+	const handleFollow = async () => {
+		if (isLogedIn) {
+			try {
+				const response = await axiosInstance(`/api/users/follow/${id}`, {
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken!,
+					},
+					method: "PUT",
+					withCredentials: true,
+				});
+
+				if (response) {
+					get_user(id);
+				}
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	};
 
@@ -42,7 +77,7 @@ const Profile = () => {
 					<div className='lg:w-4/6 mx-auto'>
 						<div className='flex flex-col sm:flex-row mt-10'>
 							<div className='sm:w-1/3 text-center sm:pr-8 sm:py-8'>
-								<div className='w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-800 text-gray-600'>
+								<div className='w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-700 text-gray-600'>
 									<svg
 										fill='none'
 										stroke='currentColor'
@@ -60,29 +95,30 @@ const Profile = () => {
 										{user.first_name} {user.last_name}
 									</h2>
 									<div className='w-12 h-1 bg-indigo-500 rounded mt-2 mb-4' />
-									<p className='text-base text-gray-400'>
-										@{user.user_name}
-									</p>
+									<p className='text-base text-gray-400'>@{user.user_name}</p>
+									{isFollowing() ? (
+										<button
+											className='rounded-md hover:bg-gray-500 p-2 hover:text-white mt-2 bg-gray-800 text-gray-200'
+											onClick={handleFollow}>
+											Following
+										</button>
+									) : (
+										<button
+											className='rounded-md hover:bg-blue-600 p-2 hover:text-white mt-2 bg-blue-800 text-gray-200'
+											onClick={handleFollow}>
+											Follow
+										</button>
+									)}
 								</div>
 							</div>
 							<div className='sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-800 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left'>
-								<p className='leading-relaxed text-lg mb-4'>
-									About: {user.about}
-								</p>
+								<p className='leading-relaxed text-lg mb-4'>About: {user.about}</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<div>
-				{userPosts && (
-					<Blogs
-						blogs={userPosts}
-						get_user_data={get_user_data}
-						profile_id={id}
-					/>
-				)}
-			</div>
+			<div>{userPosts && <Blogs blogs={userPosts} get_user_data={get_user_data} profile_id={id} />}</div>
 		</div>
 	);
 };

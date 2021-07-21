@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LoggedInUserDetail, UserDetail, UserList, CreateUser, Me, get_csrf, login_view, logout_view
+from .views import LoggedInUserDetail, UserDetail, FollowingView, UserList, CreateUser, Me, get_csrf, login_view, logout_view, testClass
 
 app_name = 'users'
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout', logout_view, name='logout'),
     path('create', CreateUser.as_view(), name='create'),
     path('me', Me.as_view(), name='check_current_user'),
-    path('<int:pk>',UserDetail.as_view(), name='user_detail'),          # RetrieveUpdateDestroy a user
     path('profile',LoggedInUserDetail.as_view(), name='user_detail'),   # Returns detail information of the current authenticated user
+    path('<int:pk>',UserDetail.as_view(), name='user_detail'),          # RetrieveUpdateDestroy a user
+    path('follow/<int:pk>', FollowingView.as_view(), name='follow_user'),
 ]

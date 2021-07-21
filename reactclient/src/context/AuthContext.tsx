@@ -16,7 +16,7 @@ type AuthProps = {
 	setIsLogedIn: (value: boolean) => void;
 	csrfToken: string | undefined;
 	setCsrfToken: (value: string) => void;
-	user: userType | undefined;
+	current_logged_user: userType | undefined;
 };
 
 export const ContextAuth = createContext<AuthProps>({
@@ -24,21 +24,21 @@ export const ContextAuth = createContext<AuthProps>({
 	setIsLogedIn: (value: boolean) => {},
 	csrfToken: "",
 	setCsrfToken: (value: string) => {},
-	user: undefined,
+	current_logged_user: undefined,
 });
 
 const AuthContext = ({ children }: any) => {
 	// const [{ isAuthenticated }, dispatch] = useReducer(reducer, initialState);
 	const [isLogedIn, setIsLogedIn] = useState<boolean>(false);
 	const [csrfToken, setCsrfToken] = useState<string | undefined>("");
-	const [user, setUser] = useState();
+	const [current_logged_user, setUser] = useState();
 
 	const AuthContextValues = {
 		isLogedIn,
 		setIsLogedIn,
 		csrfToken,
 		setCsrfToken,
-		user,
+		current_logged_user,
 	};
 
 	const get_current_user_or_log_out = async () => {
@@ -63,11 +63,7 @@ const AuthContext = ({ children }: any) => {
 		get_current_user_or_log_out();
 		// eslint-disable-next-line
 	}, []);
-	return (
-		<ContextAuth.Provider value={AuthContextValues}>
-			{children}
-		</ContextAuth.Provider>
-	);
+	return <ContextAuth.Provider value={AuthContextValues}>{children}</ContextAuth.Provider>;
 };
 
 export default AuthContext;
