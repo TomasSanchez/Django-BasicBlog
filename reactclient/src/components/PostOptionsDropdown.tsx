@@ -1,8 +1,39 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import axiosInstance from "../context/AxiosConfig";
+import { ContextAuth } from "../context/AuthContext";
+import { ContextPost } from "../context/PostsContext";
+import EditPostModal from "./EditPostModal";
 
-export default function PostOptionDropdown() {
+type propType = {
+	id: number;
+	prevPost: { title: string; content: string };
+};
+export default function PostOptionDropdown({ id, prevPost }: propType) {
+	const [openEdit, setOpenEdit] = useState<boolean>(false);
+	const { isLogedIn, csrfToken } = useContext(ContextAuth);
+	const { get_posts } = useContext(ContextPost);
+
+	const handleDelete = async () => {
+		if (isLogedIn) {
+			try {
+				const response = await axiosInstance(`/api/blog/${id}`, {
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken!,
+					},
+					method: "DELETE",
+					withCredentials: true,
+				});
+				if (response.status === 204) {
+					get_posts();
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		}
+	};
+
 	return (
 		<Menu as='div' className='relative inline-block text-left'>
 			{({ open }) => (
@@ -22,6 +53,7 @@ export default function PostOptionDropdown() {
 						</Menu.Button>
 					</div>
 
+					<EditPostModal open={openEdit} setOpen={setOpenEdit} prevPost={prevPost} id={id} />
 					<Transition
 						show={open}
 						as={Fragment}
@@ -36,31 +68,25 @@ export default function PostOptionDropdown() {
 							className='origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none'>
 							<div className='py-1'>
 								<Menu.Item>
-									{({ active }) => (
-										<a
-											href='/'
-											className='text-gray-300 block px-4 py-2 text-sm hover:bg-gray-400 hover:text-gray-900'>
+									<div className='text-gray-300 block text-sm hover:bg-gray-400 hover:text-gray-900 rounded-t-md'>
+										<button className='w-full text-left px-4 py-2' onClick={() => handleDelete()}>
 											Delete
-										</a>
-									)}
+										</button>
+									</div>
 								</Menu.Item>
 								<Menu.Item>
-									{({ active }) => (
-										<a
-											href='/'
-											className='text-gray-300 block px-4 py-2 text-sm hover:bg-gray-400 hover:text-gray-900'>
+									<div className='text-gray-300 block text-sm hover:bg-gray-400 hover:text-gray-900'>
+										<button
+											className='w-full text-left px-4 py-2 '
+											onClick={() => setOpenEdit(true)}>
 											Edit
-										</a>
-									)}
+										</button>
+									</div>
 								</Menu.Item>
 								<Menu.Item>
-									{({ active }) => (
-										<a
-											href='/'
-											className='text-gray-300 block px-4 py-2 text-sm hover:bg-gray-400 hover:text-gray-900'>
-											Else
-										</a>
-									)}
+									<div className='text-gray-300 block text-sm hover:bg-gray-400 hover:text-gray-900 rounded-b-md'>
+										<button className='w-full text-left px-4 py-2'>Else</button>
+									</div>
 								</Menu.Item>
 							</div>
 						</Menu.Items>

@@ -60,8 +60,8 @@ const Dropdown = ({ user, handleLogout }: propType) => {
 							</div>
 							<div className=''>
 								<Menu.Item>
-									<div className='text-gray-300 block px-4 py-2 text-sm hover:bg-gray-600 rounded-md hover:text-gray-100'>
-										<button onClick={handleLogout}>
+									<div className='text-gray-300 block text-sm hover:bg-gray-600 rounded-md hover:text-gray-100'>
+										<button onClick={handleLogout} className='w-full text-left px-4 py-2'>
 											Logout
 											<svg
 												fill='none'

@@ -73,7 +73,17 @@ const Comments = ({ comments, post_id, get_comments }: propType) => {
 												</a>
 											</h2>
 											<div className='text-gray-500 ml-2 flex-1 text-right text-sm leading-7'>
-												{isOwner(comment.author.user_id) ? <PostOptionDropdown /> : <div></div>}
+												{isOwner(comment.author.user_id) ? (
+													<PostOptionDropdown
+														id={comment.id}
+														prevPost={{
+															title: comment.author.user_name,
+															content: comment.content,
+														}}
+													/>
+												) : (
+													<div></div>
+												)}
 											</div>
 										</div>
 										<p className='leading-relaxed text-base'>{comment.content}</p>

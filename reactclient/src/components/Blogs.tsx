@@ -51,7 +51,12 @@ const Blogs = ({ blogs, get_user_data, profile_id }: propType) => {
 									<h2 className='text-2xl font-medium text-white title-font mb-2'>{post.title}</h2>
 
 									<div className='text-gray-500 ml-2 flex-1 text-right text-sm leading-7'>
-										{isOwner(post.author.user_id) ? <PostOptionDropdown /> : <div></div>}
+										{isOwner(post.author.user_id) ? (
+											<PostOptionDropdown
+												id={post.id}
+												prevPost={{ title: post.title, content: post.content }}
+											/>
+										) : null}
 									</div>
 								</div>
 								<div className='overflow-hidden  overflow-ellipsis max-h-40'>
