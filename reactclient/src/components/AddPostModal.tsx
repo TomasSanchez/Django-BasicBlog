@@ -19,6 +19,8 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 	const handleSubmit = async () => {
 		if (!isLogedIn) {
 			alert("not loged");
+		} else if (post.title.length < 80 && post.content.length < 992) {
+			alert("max characters reached");
 		} else {
 			const response = await axiosInstance("/api/blog/create", {
 				headers: {
@@ -61,9 +63,7 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 						</Transition.Child>
 
 						{/* This element is to trick the browser into centering the modal contents. */}
-						<span
-							className='hidden sm:inline-block sm:align-middle sm:h-screen'
-							aria-hidden='true'>
+						<span className='hidden sm:inline-block sm:align-middle sm:h-screen' aria-hidden='true'>
 							&#8203;
 						</span>
 						<Transition.Child
@@ -82,13 +82,9 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 												Share your thoughts{" "}
 											</h1>
 										</div>
-										<p
-											hidden={isLogedIn}
-											className=' text-red-700 title-font mb-4'>
+										<p hidden={isLogedIn} className=' text-red-700 title-font mb-4'>
 											Please{" "}
-											<a
-												className='underline text-red-500'
-												href='/login'>
+											<a className='underline text-red-500' href='/login'>
 												Log in
 											</a>{" "}
 											to make posts!
@@ -99,26 +95,23 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 													<div className='relative'>
 														<label
 															htmlFor='name'
-															className='leading-7 text-sm text-gray-400'>
+															className='leading-7 text-sm text-gray-200'>
 															Title
 														</label>
 														<input
-															disabled={
-																!isLogedIn
-															}
+															disabled={!isLogedIn}
 															type='text'
 															id='name'
 															value={post.title}
 															onChange={(e) =>
 																setPost({
 																	...post,
-																	title: e
-																		.target
-																		.value,
+																	title: e.target.value,
 																})
 															}
 															name='name'
 															className='w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
+															maxLength={80}
 														/>
 													</div>
 												</div>
@@ -127,26 +120,26 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 													<div className='relative'>
 														<label
 															htmlFor='text'
-															className='leading-7 text-sm text-gray-400'>
+															className='leading-7 text-sm text-gray-200'>
 															Content
 														</label>
 														<textarea
-															disabled={
-																!isLogedIn
-															}
+															disabled={!isLogedIn}
 															id='text'
 															value={post.content}
 															onChange={(e) =>
 																setPost({
 																	...post,
-																	content:
-																		e.target
-																			.value,
+																	content: e.target.value,
 																})
 															}
 															name='text'
 															className='w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 h-32 text-base outline-none text-gray-100 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out'
+															maxLength={992}
 														/>
+													</div>
+													<div className='text-gray-400'>
+														Characters left: {992 - post.content.length}
 													</div>
 												</div>
 												<div className='p-2 w-full'>

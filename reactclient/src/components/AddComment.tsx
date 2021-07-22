@@ -18,27 +18,26 @@ const AddComment = ({ post_id, get_comments }: propType) => {
 		e.preventDefault();
 		if (!isLogedIn) {
 			setNotLogedInError("You need to be logged in order to comment");
+		} else if (comment.length < 200) {
+			alert("max characters reached");
 		} else {
 			try {
-				const response = await axiosInstance(
-					`/api/blog/${post_id}/comment/create`,
-					{
-						headers: {
-							"Content-Type": "application/json",
-							"X-CSRFToken": csrfToken!,
-						},
-						method: "POST",
-						withCredentials: true,
-						data: JSON.stringify({ content: comment }),
-					}
-				);
+				const response = await axiosInstance(`/api/blog/${post_id}/comment/create`, {
+					headers: {
+						"Content-Type": "application/json",
+						"X-CSRFToken": csrfToken!,
+					},
+					method: "POST",
+					withCredentials: true,
+					data: JSON.stringify({ content: comment }),
+				});
 				if (response.status === 201) {
 					console.log("comment created succesfully");
 					// ADD modal to comment created
 					setComment("");
 					get_comments(post_id);
 				} else {
-					setError("Couldnt post comment, please try again");
+					setError("Could not post comment, please try again");
 					throw new Error(error);
 				}
 			} catch (err) {
@@ -59,8 +58,10 @@ const AddComment = ({ post_id, get_comments }: propType) => {
 						onChange={(e) => setComment(e.target.value)}
 						placeholder='Add your comment'
 						className='w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
+						maxLength={150}
 					/>
 				</div>
+				<div className='text-gray-400'>Characters left: {150 - comment.length}</div>
 				<button
 					onClick={handleSubmit}
 					className='text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg flex-initial'>
