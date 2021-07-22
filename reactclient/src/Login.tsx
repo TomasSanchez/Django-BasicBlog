@@ -6,8 +6,7 @@ import Footer from "./components/Footer";
 import axiosInstance from "./context/AxiosConfig";
 
 const Login = () => {
-	const { isLogedIn, setIsLogedIn, csrfToken, setCsrfToken } =
-		useContext(ContextAuth);
+	const { isLogedIn, setIsLogedIn, csrfToken, setCsrfToken, get_current_user_or_log_out } = useContext(ContextAuth);
 	const [error, setError] = useState<string>("");
 	const [user, setUser] = useState({
 		email: "",
@@ -37,6 +36,7 @@ const Login = () => {
 			if (response.status === 200) {
 				setIsLogedIn(true);
 				setCsrfToken(Cookies.get("csrftoken")!);
+				get_current_user_or_log_out();
 				history.push("/");
 			} else {
 				setError("Username or password Incorrect");
@@ -67,30 +67,28 @@ const Login = () => {
 			<section className='text-gray-400 bg-gray-900 body-font '>
 				<div className='container px-5 py-24 mx-auto flex flex-wrap items-center'>
 					<div className='lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0'>
-						<h1 className='title-font font-medium text-3xl text-white'>
-							Slow-carb n
-						</h1>
+						<h1 className='title-font font-medium text-3xl text-white'>Log In!</h1>
 						<p className='leading-relaxed mt-4'>
-							Poke slow-carb mixtape knausgaard, typewriter street
-							art gentrify ha
+							Basic Blog by{" "}
+							<a
+								href='https://github.com/TomasSanchez'
+								className='hover:text-gray-100 ml-1'
+								target='_blank'
+								rel='noopener noreferrer'>
+								@TomasSanchez
+							</a>
 						</p>
 					</div>
 					<div className='lg:w-2/6 md:w-1/2 bg-gray-800 bg-opacity-50 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 mr-16'>
-						<h2 className='text-white text-lg font-medium title-font mb-5'>
-							Login
-						</h2>
+						<h2 className='text-white text-lg font-medium title-font mb-5'>Login</h2>
 						{error && (
-							<h2
-								className='lg:w-2/6 md:w-1/2 text-red-300 w-auto'
-								style={{ width: "auto" }}>
+							<h2 className='lg:w-2/6 md:w-1/2 text-red-300 w-auto' style={{ width: "auto" }}>
 								{error}
 							</h2>
 						)}
 						<form onSubmit={handleSubmit}>
 							<div className='relative mb-4'>
-								<label
-									htmlFor='email'
-									className='leading-7 text-sm text-gray-400'>
+								<label htmlFor='email' className='leading-7 text-sm text-gray-400'>
 									Email
 								</label>
 								<input
@@ -108,9 +106,7 @@ const Login = () => {
 								/>
 							</div>
 							<div className='relative mb-4'>
-								<label
-									htmlFor='password'
-									className='leading-7 text-sm text-gray-400'>
+								<label htmlFor='password' className='leading-7 text-sm text-gray-400'>
 									Password
 								</label>
 								<input

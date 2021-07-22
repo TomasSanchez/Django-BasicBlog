@@ -9,7 +9,7 @@ type contextProps = {
 	blog: postType[] | undefined;
 	get_posts: () => void;
 	comments: commentType[] | undefined;
-	get_comments: (post_id: string) => void;
+	get_comments: (post_id: string | number) => void;
 	hasLiked: (likes_usernames: likes_usernamesTypes[]) => boolean;
 	handleLike: (post_id: number) => void;
 	isOwner: (author_id: number) => boolean;
@@ -19,11 +19,11 @@ type contextProps = {
 
 export const ContextPost = createContext<contextProps>({
 	blog: undefined,
-	get_posts: () => {},
+	get_posts: () => undefined,
 	comments: undefined,
-	get_comments: (post_idvalue: string) => {},
+	get_comments: (post_idvalue: string | number) => undefined,
 	hasLiked: (likes_usernames: likes_usernamesTypes[]) => false,
-	handleLike: (post_id: number) => {},
+	handleLike: (post_id: number) => undefined,
 	isOwner: (author_id: number) => false,
 	liked: "",
 	not_liked: "",
@@ -49,8 +49,8 @@ const PostsContext = ({ children }: any) => {
 		}
 	};
 
-	const get_comments = async (post_id: string) => {
-		const comments = await axiosInstance.get(`/api/blog/${post_id}/comment`);
+	const get_comments = async (post_id: string | number) => {
+		const comments = await axiosInstance.get(`/api/blog/${post_id}/comments`);
 		setComments(comments.data);
 	};
 

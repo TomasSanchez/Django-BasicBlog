@@ -25,14 +25,16 @@ type AuthProps = {
 	csrfToken: string | undefined;
 	setCsrfToken: (value: string) => void;
 	current_logged_user: userType | undefined;
+	get_current_user_or_log_out: VoidFunction;
 };
 
 export const ContextAuth = createContext<AuthProps>({
 	isLogedIn: false,
-	setIsLogedIn: (value: boolean) => {},
+	setIsLogedIn: (value: boolean) => undefined,
 	csrfToken: "",
-	setCsrfToken: (value: string) => {},
+	setCsrfToken: (value: string) => undefined,
 	current_logged_user: undefined,
+	get_current_user_or_log_out: () => undefined,
 });
 
 const AuthContext = ({ children }: any) => {
@@ -40,14 +42,6 @@ const AuthContext = ({ children }: any) => {
 	const [isLogedIn, setIsLogedIn] = useState<boolean>(false);
 	const [csrfToken, setCsrfToken] = useState<string | undefined>("");
 	const [current_logged_user, setUser] = useState();
-
-	const AuthContextValues = {
-		isLogedIn,
-		setIsLogedIn,
-		csrfToken,
-		setCsrfToken,
-		current_logged_user,
-	};
 
 	const get_current_user_or_log_out = async () => {
 		const response = await axiosInstance("/api/users/me", {
@@ -65,6 +59,15 @@ const AuthContext = ({ children }: any) => {
 				setUser(response.data);
 			}
 		}
+	};
+
+	const AuthContextValues = {
+		isLogedIn,
+		setIsLogedIn,
+		csrfToken,
+		setCsrfToken,
+		current_logged_user,
+		get_current_user_or_log_out,
 	};
 
 	useEffect(() => {

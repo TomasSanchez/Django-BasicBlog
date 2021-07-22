@@ -4,7 +4,7 @@ import axiosInstance from "../context/AxiosConfig";
 import { commentType } from "../types/commentTypes";
 import { likes_usernamesTypes } from "../types/commentTypes";
 import AddComment from "./AddComment";
-import PostOptionDropdown from "./PostOptionsDropdown";
+import CommentOptionDropdown from "./CommentOptionsDropdown";
 
 type propType = {
 	comments: commentType[] | undefined;
@@ -74,10 +74,10 @@ const Comments = ({ comments, post_id, get_comments }: propType) => {
 											</h2>
 											<div className='text-gray-500 ml-2 flex-1 text-right text-sm leading-7'>
 												{isOwner(comment.author.user_id) ? (
-													<PostOptionDropdown
+													<CommentOptionDropdown
+														post_id={post_id}
 														id={comment.id}
 														prevPost={{
-															title: comment.author.user_name,
 															content: comment.content,
 														}}
 													/>

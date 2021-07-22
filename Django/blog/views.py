@@ -24,6 +24,7 @@ class PostList(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+
 class PostCreate(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
@@ -33,7 +34,7 @@ class PostCreate(generics.CreateAPIView):
         user = self.request.user
         serializer.save(author=user)
 
-# FIX 
+# get/delete/update single post by id
 class PostDetail(generics.RetrieveUpdateDestroyAPIView, PostUserWritePermission):
     # Check/test permission
     permission_classes = [PostUserWritePermission]
@@ -124,26 +125,3 @@ class CommentLike(generics.UpdateAPIView):
         if getattr(instance, '_prefetched_objects_cache', None):            
             instance._prefetched_objects_cache = {}
         return Response(serializer.data)
-
-
-
-""" Concrete View Classes
-#CreateAPIView
-Used for create-only endpoints.
-#ListAPIView
-Used for read-only endpoints to represent a collection of model instances.
-#RetrieveAPIView
-Used for read-only endpoints to represent a single model instance.
-#DestroyAPIView
-Used for delete-only endpoints for a single model instance.
-#UpdateAPIView
-Used for update-only endpoints for a single model instance.
-##ListCreateAPIView
-Used for read-write endpoints to represent a collection of model instances.
-RetrieveUpdateAPIView
-Used for read or update endpoints to represent a single model instance.
-#RetrieveDestroyAPIView
-Used for read or delete endpoints to represent a single model instance.
-#RetrieveUpdateDestroyAPIView
-Used for read-write-delete endpoints to represent a single model instance.
-"""
