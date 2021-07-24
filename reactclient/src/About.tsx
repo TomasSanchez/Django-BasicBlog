@@ -3,11 +3,11 @@ import Footer from "./components/Footer";
 const About = () => {
 	return (
 		<div>
-			<div className='text-gray-300 bg-gray-900 container px-5 pt-10 mx-auto flex flex-wrap items-center'>
+			<div className='text-gray-300 bg-gray-900 px-5 pt-5  flex flex-wrap items-center'>
 				<div className=''>
 					<section className='text-gray-300 body-font'>
-						<div className='container px-5 py-10 mx-auto'>
-							<div className='xl:w-1/2 lg:w-3/4 w-full mx-auto text-center'>
+						<div className=' px-2 py-5 mx-auto'>
+							<div className='lg:w-3/4 mx-auto text-center'>
 								<svg
 									xmlns='http://www.w3.org/2000/svg'
 									fill='currentColor'

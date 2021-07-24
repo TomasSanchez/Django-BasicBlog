@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { ContextAuth } from "../context/AuthContext";
 import axiosInstance from "../context/AxiosConfig";
 import AddPostModal from "./AddPostModal";
+import SearchBar from "./SearchBar";
 import Dropdown from "./UserDropdownMenu";
 
 const Navbar = () => {
@@ -24,7 +25,9 @@ const Navbar = () => {
 				setIsLogedIn(false);
 				history.push("/");
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	return (
@@ -46,6 +49,7 @@ const Navbar = () => {
 							<a href='/about' className='mr-5 hover:text-white'>
 								About
 							</a>
+							<SearchBar />
 						</nav>
 						{!isLogedIn ? (
 							<div>

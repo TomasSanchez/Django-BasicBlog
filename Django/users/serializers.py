@@ -4,7 +4,7 @@ from .models import User, UserFollowing
 
 class UserSerializer(serializers.ModelSerializer):
 
-    liked_posts = serializers.SerializerMethodField('get_liked_posts')
+    liked_posts = serializers.SerializerMethodField()
     following = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
 

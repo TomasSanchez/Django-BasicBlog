@@ -10,7 +10,7 @@ from django.middleware.csrf import get_token
 from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate, login, logout
 
-from rest_framework import generics, status
+from rest_framework import filters, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -131,3 +131,14 @@ class WhoAmI(APIView):
             return Response({ 'id':user.id, 'email':user.email, 'user_name':user.user_name,
                             'first_name':user.first_name, 'last_name':user.last_name, 'following': user.following.all().values()})
         return Response({'AnonymousUser'})
+
+
+class DynamicSearchFilter(filters.SearchFilter):
+    def get_search_fields(self, view, request):
+        return request.GET.getlist('search_fields', [])
+
+
+class SearchView(generics.ListAPIView):
+    filter_backends = (DynamicSearchFilter,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

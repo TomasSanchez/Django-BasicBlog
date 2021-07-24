@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CommentCreate, CommentDetail, CommentLike, CommentList, PostCreate, PostDetail, PostList, PostUserList, PostLike
+from .views import CommentCreate, CommentDetail, CommentLike, CommentList, PostCreate, PostDetail, PostList, PostUserList, PostLike, SearchView
 
 app_name = 'blog'
 
@@ -7,6 +7,9 @@ urlpatterns = [
     path('', PostList.as_view(), name='post_list'),
     path('create', PostCreate.as_view(), name='post_create'),
     path('<int:pk>',PostDetail.as_view(), name='post_detail'),                              #pk = primary key of a post
+    
+    # REMOVE TEST
+    path('search', SearchView.as_view(), name='search'),
     
     path('<int:pk>/comments', CommentList.as_view(), name='comment_list'),                   #pk = primary key of a post, all comments of a post
     path('<int:pk>/comment/create', CommentCreate.as_view(), name='comment_create'),        #pk = primary key of a post, create comment on post

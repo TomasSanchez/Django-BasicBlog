@@ -1,12 +1,8 @@
-from operator import add
-
 from django.http.response import JsonResponse
-from users.models import User
-from django.db.models import query
-from rest_framework import generics, status
+from rest_framework import generics, filters
 from rest_framework.response import Response
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
-from blog.models import Comment, Post
+from .models import Comment, Post
 from .serializers import CommentSerializer, PostSerializer
 
 
@@ -125,3 +121,14 @@ class CommentLike(generics.UpdateAPIView):
         if getattr(instance, '_prefetched_objects_cache', None):            
             instance._prefetched_objects_cache = {}
         return Response(serializer.data)
+
+
+class DynamicSearchFilter(filters.SearchFilter):
+    def get_search_fields(self, view, request):
+        return request.GET.getlist('search_fields', [])
+
+
+class SearchView(generics.ListAPIView):
+    filter_backends = (DynamicSearchFilter,)
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
