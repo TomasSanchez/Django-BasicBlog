@@ -63,18 +63,22 @@ const SearchResults = ({ open, setOpen, responseData }: propType) => {
 								<div className=' px-4 pt-5 pb-4 sm:p-6 sm:pb-4 flex flex-row justify-start'>
 									<div className='flex text-white text-left flex-col w-1/2'>
 										<h1 className='text-gray-400'>Posts:</h1>
-										<div className='w-11/12 mx-auto'>
+										<div className='w-11/12 mx-auto overflow-y-auto h-80'>
 											{responseData.posts.length > 0 ? (
 												responseData.posts.map((post) => (
-													<div className='py-1 border-b border-gray-700'>
-														<div className='flex py-2 text-md'>
-															{" "}
-															<a href={`/${post.id}`}>{post.title}</a>
-														</div>
-														<div className='text-gray-400 text-sm'>
-															{post.published.split("T")[0]}{" "}
-															{post.published.split("T")[1].split(".")[0]}
-														</div>
+													<div
+														key={post.id}
+														className='p-1 border-b border-gray-700 hover:bg-gray-700'>
+														<a href={`/${post.id}`}>
+															<div className='flex py-2 text-md'>
+																{" "}
+																<h2>{post.title}</h2>
+															</div>
+															<div className='text-gray-400 text-sm'>
+																{post.published.split("T")[0]}{" "}
+																{post.published.split("T")[1].split(":")[0]} hrs
+															</div>
+														</a>
 													</div>
 												))
 											) : (
@@ -83,17 +87,21 @@ const SearchResults = ({ open, setOpen, responseData }: propType) => {
 										</div>
 									</div>
 									<div className='flex text-white text-left flex-col w-1/2'>
-										<h1 className='text-gray-400'>Users:</h1>
-										<div className='w-11/12 mx-auto'>
+										<h1 className='text-gray-400 '>Users:</h1>
+										<div className='w-11/12 mx-auto overflow-y-auto h-80'>
 											{responseData.users.map((user) => (
-												<div key={user.id} className='py-1 border-b border-gray-700'>
-													<div className='flex text-md'>
-														{user.first_name + " " + user.last_name}
-													</div>
-													<div className='text-sm text-gray-400'>
-														{" "}
-														<a href={`/profile/${user.id}`}>@{user.user_name}</a>
-													</div>
+												<div
+													key={user.id}
+													className='p-1 border-b border-gray-700 hover:bg-gray-700 '>
+													<a href={`/profile/${user.id}`}>
+														<div className='flex text-md'>
+															{user.first_name + " " + user.last_name}
+														</div>
+														<div className='text-sm text-gray-400'>
+															{" "}
+															<div>@{user.user_name}</div>
+														</div>
+													</a>
 												</div>
 											))}
 										</div>

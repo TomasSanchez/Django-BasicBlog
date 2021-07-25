@@ -23,17 +23,9 @@ const Blogs = ({ blogs, get_user_data, profile_id }: propType) => {
 		}
 	};
 
-	const sort = () => {
-		blogs.sort((a, b) => (a.likes > b.likes ? 1 : -1));
-	};
-
 	return (
 		<section className='text-gray-400 bg-gray-900 body-font overflow-hidden'>
 			<div className='container px-5 py-20 mx-auto'>
-				<div className='text-right mr-3 mb-3'>
-					{" "}
-					<button onClick={sort}>Sort</button>{" "}
-				</div>
 				<div className='-my-8 divide-y-2 divide-gray-800'>
 					{blogs?.map((post: postType) => (
 						<div className='py-8 flex flex-wrap md:flex-nowrap' key={post.id}>
