@@ -15,13 +15,14 @@ services:
         depends_on:
             - backend
             - frontend
-        restart: "on-failure"
 
     backend:
         build: ./Django
-        restart: "on-failure"
+        # command: bash -c "./wait-for-it.sh localhost:5432 --timeout=1 --strict -- echo 'db_up' && python manage.py makemigrations && python manage.py migrate "
+        # command: bash -c "./wait-for-it.sh localhost:5432 --timeout=1 --strict -- echo 'db_up' && python manage.py makemigrations && python manage.py migrate gunicorn core.wsgi --bind 0.0.0.0:8000"
         container_name: blog_app_backend
         image: django_blog_app_backend
+        restart: "on-failure"
         ports:
             - "8000:8000"
         volumes:
@@ -40,10 +41,9 @@ services:
         #     #     - DB_PASS=postgres
 
         expose:
-            # - ${APP_PORT}
             - 8000
-    #     # depends_on:
-    #     #     - db
+        depends_on:
+            - db
 
     frontend:
         build: ./reactclient
@@ -54,16 +54,20 @@ services:
         volumes:
             - react_build:/app/build
 
-    # db:
-    #     image: postgres
-    #     container_name: postgres_db
-    #     volumes:
-    #         - ./data/db:/var/lib/postgresql/data
-    #     environment:
-    #         # - POSTGRES_DB=postgres
-    #         # - POSTGRES_USER=postgres
-    #         # - POSTGRES_PASSWORD=postgres
-    #         - POSTGRES_HOST_AUTH_METHOD=trust
+    db:
+        image: postgres
+        container_name: blog_app_db
+        # volumes:
+        #     - ./data/db:/var/lib/postgresql/data
+        environment:
+            # - POSTGRES_DB=postgres
+            # - POSTGRES_USER=postgres
+            # - POSTGRES_PASSWORD=postgres
+            - POSTGRES_HOST_AUTH_METHOD=trust
+        expose:
+            - 5432
+        ports:
+            - "5432:5432"
 volumes:
     react_build:
     static_vol:

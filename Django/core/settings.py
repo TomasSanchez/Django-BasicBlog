@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-ysrrz_r@gu)t0gn0_o+6igs)(joisplbuyex!b71dvte)w5kdc
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 # ALLOWED_HOSTS.extend(
 #     filter(
 #         None,
@@ -75,23 +75,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # sqlite db
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DB_NAME'),
-#         'USER': os.environ.get('DB_USER'),
-#         'PASSWORD': os.environ.get('DB_PASS'),
-#         'HOST': os.environ.get('DB_HOST'),
-#         # 'PORT': 5432
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "postgres",
+        'USER': "postgres",
+        'PASSWORD': "postgres",
+        'HOST': "db",
+        'PORT': 5432
+    }
+}
 
 
 # Password validation
@@ -133,25 +133,6 @@ USE_TZ = True
 # django default
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticbe')
 STATIC_URL = '/staticbe/'
-
-# STATIC_URL = '/static/static/'
-# MEDIA_URL = '/static/media/'
-
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-# towards serving react+django together
-# STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "build/static"),  # update the STATICFILES_DIRS
-# )
-
-# MEDIA_ROOT = 'backend/media/'
-# STATIC_ROOT = 'backend/static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

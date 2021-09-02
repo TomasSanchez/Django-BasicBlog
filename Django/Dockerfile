@@ -11,9 +11,16 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN python manage.py collectstatic --noinput
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-CMD ["gunicorn", "core.wsgi", "--bind", "0.0.0.0:8000"]
+
+# Give permissions to file
+RUN chmod +x ./wait-for-it.sh
+
+# CMD ["./wait-for-it.sh" , "localhost:5432" , "--strict" , "--timeout=3" , "--", "&&", "python", "manage.py", "makemigrations", "python", "manage.py", "migrate"]
+CMD ./wait-for-it.sh db:5432 --strict --timeout=3 -- && python manage.py makemigrations && python manage.py migrate && gunicorn core.wsgi --bind 0.0.0.0:8000
+# CMD wait.sh db 5432 && \
+#     python manage.py makemigrations && \
+#     python manage.py migrate && \
+#     gunicorn core.wsgi --bind 0.0.0.0:8000
 
 
 # FROM python:3.6
