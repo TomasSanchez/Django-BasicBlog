@@ -6,11 +6,12 @@ services:
         #     # build: ./nginx # location of the dockerfile that defines the nginx image. The dockerfile will be used to spin up an image during the build stage
         container_name: blog_app_nginx
         ports:
-            - 4000:8080 # 1339:80 map the external port 1339 to the internal port 80. Any traffic from 1339 externally will be passed to port 80 of the NGINX container. To access this app, one would use an address such as 0.0.0.0:1339
+            - 5000:8080 # 1339:80 map the external port 1339 to the internal port 80. Any traffic from 1339 externally will be passed to port 80 of the NGINX container. To access this app, one would use an address such as 0.0.0.0:1339
         volumes:
             - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
             - react_build:/var/www/react
-            - static_vol:/backend/static
+            - static_vol:/backend/staticbe
+            - ./nginx/nginxlogs:/var/log/nginx/
         depends_on:
             - backend
             - frontend
@@ -18,8 +19,6 @@ services:
 
     backend:
         build: ./Django
-        # command: bash -c " cd Django/ && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic && python manage.py runserver 0.0.0.0:8000"
-        command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn core.wsgi --bind 0.0.0.0:8000"
         restart: "on-failure"
         container_name: blog_app_backend
         image: django_blog_app_backend
@@ -52,9 +51,7 @@ services:
         image: django_blog_app_frontend
         depends_on:
             - backend
-        # FIX doesnt work
         volumes:
-            #     - .reactclient:/app
             - react_build:/app/build
 
     # db:

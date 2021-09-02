@@ -19,12 +19,12 @@ ReactDOM.render(
 			<Router>
 				<Switch>
 					<Route exact path='/' component={App} />
-					<Route path='/login' component={Login} />
-					<Route path='/signup' component={Signup} />
-					<Route path='/about' component={About} />
-					<Route path='/feed' component={PersonalFeed} />
-					<Route path='/profile/:id' component={Profile} />
-					<Route path='/:id' component={PostDetail} />
+					<Route exact path='/login' component={Login} />
+					<Route exact path='/signup' component={Signup} />
+					<Route exact path='/about' component={About} />
+					<Route exact path='/feed' component={PersonalFeed} />
+					<Route exact path='/profile/:id' component={Profile} />
+					<Route exact path='/:id' component={PostDetail} />
 				</Switch>
 			</Router>
 		</PostsContext>

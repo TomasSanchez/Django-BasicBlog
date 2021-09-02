@@ -19,7 +19,7 @@ const AddPostModal = ({ open, setOpen }: propType) => {
 	const handleSubmit = async () => {
 		if (!isLogedIn) {
 			alert("not loged");
-		} else if (post.title.length < 80 && post.content.length < 992) {
+		} else if (post.title.length > 80 && post.content.length >= 992) {
 			alert("max characters reached");
 		} else {
 			const response = await axiosInstance("/api/blog/create", {
